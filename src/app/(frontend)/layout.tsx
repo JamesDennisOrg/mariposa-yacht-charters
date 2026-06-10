@@ -3,6 +3,8 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './styles.css'
 
+// Force flush of caches comment only
+
 const geistSans = Geist({
   variable: '--font-sans',
   subsets: ['latin'],
