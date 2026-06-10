@@ -69,7 +69,7 @@ export async function POST(req: Request) {
 
     // Securely forward the client browser layer out to the premium hosted layout interface
     if (session.url) {
-      return NextResponse.redirect(new URL(session.url), { status: 303 })
+      return NextResponse.json({ url: session.url }, { status: 200 })
     }
 
     return NextResponse.json(
