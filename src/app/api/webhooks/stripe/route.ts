@@ -29,33 +29,35 @@ export async function POST(req: Request) {
 
     if (metadata) {
       try {
-        // 1. Force the asynchronous payload runtime configuration layout object to resolve completely first
         const resolvedConfig = await config
         const payload = await getPayload({ config: resolvedConfig })
 
-        console.log('⚡ Serverless Payload instance initialized successfully over Vercel.')
+        // Handle Stripe's lower-case conversion fallback automatically
+        const bookingDateValue = metadata.bookingDate || metadata.bookingdate
+        const itineraryIdValue = metadata.itineraryId || metadata.itineraryid
+        const customerNameValue = metadata.customerName || metadata.customername
+        const customerEmailValue = metadata.customerEmail || metadata.customeremail
+        const customerPhoneValue = metadata.customerPhone || metadata.customerphone
+        const guestCountValue = metadata.guestCount || metadata.guestcount
 
-        // 2. Execute the database insert using pure, clean camelCase schema keys matching Bookings.ts
-        const newBooking = await payload.create({
+        await payload.create({
           collection: 'bookings',
           data: {
-            bookingDate: metadata.bookingDate,
+            // Write the variables using the verified fallback keys matching your exact Bookings.ts schema fields
+            bookingDate: bookingDateValue,
             status: 'CONFIRMED',
-            itinerary: Number(metadata.itineraryId),
-            customerName: metadata.customerName,
-            customerEmail: metadata.customerEmail,
-            customerPhone: metadata.customerPhone,
-            guestCount: parseInt(metadata.guestCount, 10),
+            itinerary: Number(itineraryIdValue),
+            customerName: customerNameValue,
+            customerEmail: customerEmailValue,
+            customerPhone: customerPhoneValue,
+            guestCount: parseInt(guestCountValue || '2', 10),
             stripeSessionId: session.id,
           },
         })
 
-        console.log(
-          `🎉 Success! Booking ${newBooking.id} recorded directly to Supabase for ${metadata.customerName}`,
-        )
+        console.log(`🎉 Success! Booking recorded directly to Supabase for ${customerNameValue}`)
       } catch (dbErr: any) {
-        // This will capture and output any internal or relational schema errors straight to your Vercel logs stream
-        console.error('❌ Production webhook database write crash:', dbErr.message || dbErr)
+        console.error('❌ Webhook data processing crash:', dbErr.message || dbErr)
         return NextResponse.json(
           { error: `Database write exception: ${dbErr.message}` },
           { status: 500 },
