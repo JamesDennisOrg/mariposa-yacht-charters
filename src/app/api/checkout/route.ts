@@ -46,7 +46,7 @@ export async function POST(req: Request) {
               name: `${excursion.title} - Day Charter Voyage`,
               description: `Date Reserved: ${bookingDateStr} | Passengers: ${guestCount}`,
             },
-            unit_amount: excursion.price * 100, // Stripe expects currency amounts in cents
+            unit_amount: Math.round(Number(excursion.price) * 100), // Stripe expects currency amounts in cents
           },
           quantity: 1,
         },
