@@ -28,26 +28,39 @@ export async function POST(req: Request) {
     const metadata = session.metadata
 
     if (metadata) {
-      const payload = await getPayload({ config: await config })
+      try {
+        // 1. Force the asynchronous payload runtime configuration layout object to resolve completely first
+        const resolvedConfig = await config
+        const payload = await getPayload({ config: resolvedConfig })
 
-      // Create an official reservation document row inside Supabase via Payload Local API
-      await payload.create({
-        collection: 'bookings',
-        data: {
-          bookingDate: metadata.bookingDate,
-          status: 'CONFIRMED',
-          itinerary: Number(metadata.itineraryId), // Pass relation link token target numerical index
-          customerName: metadata.customerName,
-          customerEmail: metadata.customerEmail,
-          customerPhone: metadata.customerPhone,
-          guestCount: parseInt(metadata.guestCount, 10),
-          stripeSessionId: session.id,
-        },
-      })
+        console.log('⚡ Serverless Payload instance initialized successfully over Vercel.')
 
-      console.log(
-        `🎉 Charter secured successfully for ${metadata.customerName} on ${metadata.bookingDate}`,
-      )
+        // 2. Execute the database insert using pure, clean camelCase schema keys matching Bookings.ts
+        const newBooking = await payload.create({
+          collection: 'bookings',
+          data: {
+            bookingDate: metadata.bookingDate,
+            status: 'CONFIRMED',
+            itinerary: Number(metadata.itineraryId),
+            customerName: metadata.customerName,
+            customerEmail: metadata.customerEmail,
+            customerPhone: metadata.customerPhone,
+            guestCount: parseInt(metadata.guestCount, 10),
+            stripeSessionId: session.id,
+          },
+        })
+
+        console.log(
+          `🎉 Success! Booking ${newBooking.id} recorded directly to Supabase for ${metadata.customerName}`,
+        )
+      } catch (dbErr: any) {
+        // This will capture and output any internal or relational schema errors straight to your Vercel logs stream
+        console.error('❌ Production webhook database write crash:', dbErr.message || dbErr)
+        return NextResponse.json(
+          { error: `Database write exception: ${dbErr.message}` },
+          { status: 500 },
+        )
+      }
     }
   }
 
