@@ -40,5 +40,6 @@ export default buildConfig({
         process.env.MYC_POSTGRES_URL ||
         '',
     },
+    push: true,
   }),
 })
