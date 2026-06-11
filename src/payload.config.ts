@@ -34,12 +34,11 @@ export default buildConfig({
   },
   db: postgresAdapter({
     pool: {
-      // Concatenate the absolute SSL skip argument to the active Vercel environment variables
       connectionString:
-        (process.env.DATABASE_URL ||
-          process.env.MYC_POSTGRES_URL_NON_POOLING ||
-          process.env.MYC_POSTGRES_URL ||
-          '') + '?sslmode=no-verify',
+        process.env.DATABASE_URL ||
+        process.env.MYC_POSTGRES_URL_NON_POOLING ||
+        process.env.MYC_POSTGRES_URL ||
+        '',
     },
   }),
 })
