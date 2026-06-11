@@ -15,6 +15,11 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   admin: {
     user: Users.slug,
+    // Forces Next.js/Vercel to bundle the entire generated admin area dynamically
+    // bundler: 'vite',
+    meta: {
+      titleSuffix: '- Mariposa Charters Admin',
+    },
   },
   collections: [
     Users,
