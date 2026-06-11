@@ -32,18 +32,17 @@ export async function POST(req: Request) {
         const resolvedConfig = await config
         const payload = await getPayload({ config: resolvedConfig })
 
-        // Handle Stripe's lower-case conversion fallback automatically
-        const bookingDateValue = metadata.bookingDate || metadata.bookingdate
-        const itineraryIdValue = metadata.itineraryId || metadata.itineraryid
-        const customerNameValue = metadata.customerName || metadata.customername
-        const customerEmailValue = metadata.customerEmail || metadata.customeremail
-        const customerPhoneValue = metadata.customerPhone || metadata.customerphone
-        const guestCountValue = metadata.guestCount || metadata.guestcount
+        // Type-safe bracket notation handles both camelCase and Stripe's lowercase conversion perfectly
+        const bookingDateValue = metadata['bookingDate'] || metadata['bookingdate']
+        const itineraryIdValue = metadata['itineraryId'] || metadata['itineraryid']
+        const customerNameValue = metadata['customerName'] || metadata['customername']
+        const customerEmailValue = metadata['customerEmail'] || metadata['customeremail']
+        const customerPhoneValue = metadata['customerPhone'] || metadata['customerphone']
+        const guestCountValue = metadata['guestCount'] || metadata['guestcount']
 
         await payload.create({
           collection: 'bookings',
           data: {
-            // Write the variables using the verified fallback keys matching your exact Bookings.ts schema fields
             bookingDate: bookingDateValue,
             status: 'CONFIRMED',
             itinerary: Number(itineraryIdValue),
