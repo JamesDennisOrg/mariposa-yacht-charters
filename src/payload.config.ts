@@ -34,15 +34,12 @@ export default buildConfig({
   },
   db: postgresAdapter({
     pool: {
+      // Concatenate the absolute SSL skip argument to the active Vercel environment variables
       connectionString:
-        process.env.DATABASE_URL ||
-        process.env.MYC_POSTGRES_URL_NON_POOLING ||
-        process.env.MYC_POSTGRES_URL ||
-        '',
-      // FIXES THE 'SELF-SIGNED CERTIFICATE' CRASH ON VERCEL
-      ssl: {
-        rejectUnauthorized: false, // Instructs Node.js to safely allow Supabase's cloud SSL certificate
-      },
+        (process.env.DATABASE_URL ||
+          process.env.MYC_POSTGRES_URL_NON_POOLING ||
+          process.env.MYC_POSTGRES_URL ||
+          '') + '?sslmode=no-verify',
     },
   }),
 })
