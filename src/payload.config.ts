@@ -34,12 +34,12 @@ export default buildConfig({
   },
   db: postgresAdapter({
     pool: {
-      // 1. Local DATABASE_URL -> 2. Vercel prefixed non-pooling URL -> 3. Vercel prefixed pooling URL
       connectionString:
-        process.env.DATABASE_URL ||
-        process.env.MYC_POSTGRES_URL_NON_POOLING ||
-        process.env.MYC_POSTGRES_URL ||
-        '',
+        (process.env.DATABASE_URL ||
+          process.env.MYC_POSTGRES_URL_NON_POOLING ||
+          process.env.MYC_POSTGRES_URL ||
+          '') +
+        (process.env.NODE_ENV === 'production' ? '?sslmode=require&connect_timeout=30' : ''),
     },
   }),
 })
