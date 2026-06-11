@@ -35,11 +35,14 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString:
-        (process.env.DATABASE_URL ||
-          process.env.MYC_POSTGRES_URL_NON_POOLING ||
-          process.env.MYC_POSTGRES_URL ||
-          '') +
-        (process.env.NODE_ENV === 'production' ? '?sslmode=require&connect_timeout=30' : ''),
+        process.env.DATABASE_URL ||
+        process.env.MYC_POSTGRES_URL_NON_POOLING ||
+        process.env.MYC_POSTGRES_URL ||
+        '',
+      // FIXES THE 'SELF-SIGNED CERTIFICATE' CRASH ON VERCEL
+      ssl: {
+        rejectUnauthorized: false, // Instructs Node.js to safely allow Supabase's cloud SSL certificate
+      },
     },
   }),
 })
