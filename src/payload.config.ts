@@ -29,7 +29,12 @@ export default buildConfig({
   },
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL || process.env.POSTGRES_URL || '',
+      // 1. Local DATABASE_URL -> 2. Vercel prefixed non-pooling URL -> 3. Vercel prefixed pooling URL
+      connectionString:
+        process.env.DATABASE_URL ||
+        process.env.MYC_POSTGRES_URL_NON_POOLING ||
+        process.env.MYC_POSTGRES_URL ||
+        '',
     },
   }),
 })
