@@ -46,29 +46,36 @@ export default buildConfig({
   plugins:
     process.env.NODE_ENV === 'production'
       ? [
-          // s3Storage({
-          //   collections: {
-          //     media: true,
-          //   },
-          //   bucket: 'media',
-          //   config: {
-          //     endpoint: `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/s3`,
-          //     region: 'us-east-1',
-          //     credentials:
-          //       typeof window === 'undefined'
-          //         ? {
-          //             // 1. Pass your database username ("postgres") as the S3 access key
-          //             accessKeyId: process.env.MYC_POSTGRES_USER || 'postgres',
-          //             // 2. Pass your database password ("g9P7OHpzhP5oH0pi") as the S3 secret key
-          //             secretAccessKey: process.env.MYC_POSTGRES_PASSWORD || '',
-          //           }
-          //         : {
-          //             accessKeyId: 'mock',
-          //             secretAccessKey: 'mock',
-          //           },
-          //     forcePathStyle: true,
-          //   },
-          // }),
+          s3Storage({
+            collections: {
+              media: true,
+            },
+            bucket: 'media',
+            config: {
+              endpoint: `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/s3`,
+              region: 'us-east-1',
+              credentials:
+                typeof window === 'undefined'
+                  ? {
+                      // Strips the "sb_" tokens so the AWS SDK reads the raw cryptographic keys smoothly
+                      accessKeyId: (
+                        process.env.NEXT_PUBLIC_MYC_SUPABASE_PUBLISHABLE_KEY || ''
+                      ).replace('sb_publishable_', ''),
+                      secretAccessKey: (process.env.MYC_SUPABASE_SECRET_KEY || '').replace(
+                        'sb_secret_',
+                        '',
+                      ),
+                    }
+                  : {
+                      accessKeyId: 'mock',
+                      secretAccessKey: 'mock',
+                    },
+              forcePathStyle: true,
+            },
+            // Crucial: Overwrites Payload's default local directory routing
+            // and forces the admin dashboard to fetch thumbnails directly from your public Supabase Storage CDN!
+            prefix: `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/object/public/media`,
+          }),
         ]
       : [],
 })
