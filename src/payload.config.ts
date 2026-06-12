@@ -57,16 +57,11 @@ export default buildConfig({
               credentials:
                 typeof window === 'undefined'
                   ? {
-                      // Strips "sb_publishable_" so the AWS SDK passes a raw cryptographic key token
-                      accessKeyId: (
-                        process.env.NEXT_PUBLIC_MYC_SUPABASE_PUBLISHABLE_KEY || ''
-                      ).replace('sb_publishable_', ''),
+                      // 1. Pass your database username ("postgres") as the S3 access key
+                      accessKeyId: process.env.MYC_POSTGRES_USER || 'postgres',
 
-                      // Strips "sb_secret_" so the AWS SDK passes a raw cryptographic secret token
-                      secretAccessKey: (process.env.MYC_SUPABASE_SECRET_KEY || '').replace(
-                        'sb_secret_',
-                        '',
-                      ),
+                      // 2. Pass your database password ("g9P7OHpzhP5oH0pi") as the S3 secret key
+                      secretAccessKey: process.env.MYC_POSTGRES_PASSWORD || '',
                     }
                   : {
                       accessKeyId: 'mock',
