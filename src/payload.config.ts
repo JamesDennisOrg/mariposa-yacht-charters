@@ -10,7 +10,6 @@ import { Itineraries } from './collections/Itineraries'
 import { Bookings } from './collections/Bookings'
 import { BlockedDates } from './collections/BlockedDates'
 
-import { cloudStoragePlugin } from '@payloadcms/plugin-cloud-storage'
 import { s3Storage } from '@payloadcms/storage-s3'
 
 const filename = fileURLToPath(import.meta.url)
@@ -31,9 +30,10 @@ export default buildConfig({
   },
   db: postgresAdapter({
     pool: {
+      // 1. Force Vercel to check the transaction pooler URL first to stop EMAXCONNSESSION errors
       connectionString:
+        process.env.MYC_POSTGRES_PRISMA_URL ||
         process.env.DATABASE_URL ||
-        process.env.MYC_POSTGRES_URL_NON_POOLING ||
         process.env.MYC_POSTGRES_URL ||
         '',
       max: 5,
@@ -43,7 +43,6 @@ export default buildConfig({
     push: true,
   }),
 
-  // 2. Add the dynamic plugins array block underneath your database adapter configurations
   plugins:
     process.env.NODE_ENV === 'production'
       ? [
@@ -55,13 +54,17 @@ export default buildConfig({
             config: {
               endpoint: `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/s3`,
               region: 'us-east-1',
-              credentials: {
-                // 1. Swap the public anon key out for your master service user key
-                accessKeyId: process.env.MYC_POSTGRES_USER || 'postgres',
-
-                // 2. Swap the secret key out for your direct project database password token
-                secretAccessKey: process.env.MYC_POSTGRES_PASSWORD || '',
-              },
+              // 2. The server-guarded master credentials belong strictly inside the s3Storage block here!
+              credentials:
+                typeof window === 'undefined'
+                  ? {
+                      accessKeyId: process.env.MYC_POSTGRES_USER || 'postgres',
+                      secretAccessKey: process.env.MYC_POSTGRES_PASSWORD || '',
+                    }
+                  : {
+                      accessKeyId: 'mock',
+                      secretAccessKey: 'mock',
+                    },
               forcePathStyle: true,
             },
           }),
