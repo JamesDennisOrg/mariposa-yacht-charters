@@ -46,30 +46,29 @@ export default buildConfig({
   plugins:
     process.env.NODE_ENV === 'production'
       ? [
-          s3Storage({
-            collections: {
-              media: true,
-            },
-            bucket: 'media',
-            config: {
-              endpoint: `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/s3`,
-              region: 'us-east-1',
-              credentials:
-                typeof window === 'undefined'
-                  ? {
-                      // 1. Pass your database username ("postgres") as the S3 access key
-                      accessKeyId: process.env.MYC_POSTGRES_USER || 'postgres',
-
-                      // 2. Pass your database password ("g9P7OHpzhP5oH0pi") as the S3 secret key
-                      secretAccessKey: process.env.MYC_POSTGRES_PASSWORD || '',
-                    }
-                  : {
-                      accessKeyId: 'mock',
-                      secretAccessKey: 'mock',
-                    },
-              forcePathStyle: true,
-            },
-          }),
+          // s3Storage({
+          //   collections: {
+          //     media: true,
+          //   },
+          //   bucket: 'media',
+          //   config: {
+          //     endpoint: `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/s3`,
+          //     region: 'us-east-1',
+          //     credentials:
+          //       typeof window === 'undefined'
+          //         ? {
+          //             // 1. Pass your database username ("postgres") as the S3 access key
+          //             accessKeyId: process.env.MYC_POSTGRES_USER || 'postgres',
+          //             // 2. Pass your database password ("g9P7OHpzhP5oH0pi") as the S3 secret key
+          //             secretAccessKey: process.env.MYC_POSTGRES_PASSWORD || '',
+          //           }
+          //         : {
+          //             accessKeyId: 'mock',
+          //             secretAccessKey: 'mock',
+          //           },
+          //     forcePathStyle: true,
+          //   },
+          // }),
         ]
       : [],
 })
