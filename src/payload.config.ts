@@ -46,33 +46,29 @@ export default buildConfig({
   plugins:
     process.env.NODE_ENV === 'production'
       ? [
-          s3Storage({
-            collections: {
-              media: true,
-            },
-            bucket: 'media',
-            // Explicit type-safe string parameters accepted by Payload 3.0's S3 adapter core definitions
-            config: {
-              endpoint: `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/s3`,
-              region: 'us-east-1',
-              credentials:
-                typeof window === 'undefined'
-                  ? {
-                      accessKeyId: (
-                        process.env.NEXT_PUBLIC_MYC_SUPABASE_PUBLISHABLE_KEY || ''
-                      ).replace('sb_publishable_', ''),
-                      secretAccessKey: (process.env.MYC_SUPABASE_SECRET_KEY || '').replace(
-                        'sb_secret_',
-                        '',
-                      ),
-                    }
-                  : {
-                      accessKeyId: 'mock',
-                      secretAccessKey: 'mock',
-                    },
-              forcePathStyle: true,
-            },
-          }),
+          // s3Storage({
+          //   collections: {
+          //     media: true,
+          //   },
+          //   bucket: 'media',
+          //   config: {
+          //     endpoint: `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/s3`,
+          //     region: 'us-east-1',
+          //     credentials:
+          //       typeof window === 'undefined'
+          //         ? {
+          //             // 1. Pass your database username ("postgres") as the S3 access key
+          //             accessKeyId: process.env.MYC_POSTGRES_USER || 'postgres',
+          //             // 2. Pass your database password ("g9P7OHpzhP5oH0pi") as the S3 secret key
+          //             secretAccessKey: process.env.MYC_POSTGRES_PASSWORD || '',
+          //           }
+          //         : {
+          //             accessKeyId: 'mock',
+          //             secretAccessKey: 'mock',
+          //           },
+          //     forcePathStyle: true,
+          //   },
+          // }),
         ]
       : [],
 })

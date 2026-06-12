@@ -11,6 +11,19 @@ export const Media: CollectionConfig = {
   admin: {
     useAsTitle: 'filename',
   },
+
+  hooks: {
+    afterRead: [
+      ({ doc }) => {
+        if (process.env.NODE_ENV === 'production' && doc.filename) {
+          // Replaces the broken local /media/ path with your live, public Supabase asset endpoint URL!
+          doc.url = `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/object/public/media/${doc.filename}`
+        }
+        return doc
+      },
+    ],
+  },
+
   // Use a conditional assignment to satisfy Vercel's read-only compilation requirements
   upload:
     process.env.NODE_ENV === 'production'
