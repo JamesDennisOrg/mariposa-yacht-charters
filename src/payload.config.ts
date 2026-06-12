@@ -39,6 +39,9 @@ export default buildConfig({
         process.env.MYC_POSTGRES_URL_NON_POOLING ||
         process.env.MYC_POSTGRES_URL ||
         '',
+      max: 5,
+      idleTimeoutMillis: 10000,
+      connectionTimeoutMillis: 5000,
     },
     push: true,
   }),
