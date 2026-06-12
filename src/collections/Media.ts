@@ -13,61 +13,51 @@ export const Media: CollectionConfig = {
   },
 
   hooks: {
-    beforeChange: [
-      async ({ data, req, operation }) => {
-        // Intercept new file uploads strictly on live production (Vercel serverless threads)
-        if (process.env.NODE_ENV === 'production' && operation === 'create' && req.file) {
+    beforeOperation: [
+      async ({ args, operation }) => {
+        // Intercept raw image bytes at the absolute beginning of a form submission in production
+        if (process.env.NODE_ENV === 'production' && operation === 'create' && args.req?.file) {
           try {
             const supabaseUrl = process.env.NEXT_PUBLIC_MYC_SUPABASE_URL
             const serviceKey =
               process.env.MYC_SUPABASE_SECRET_KEY || process.env.MYC_SUPABASE_SERVICE_ROLE_KEY
+            const fileObj = args.req.file as any
 
-            if (supabaseUrl && serviceKey) {
-              // The secure authenticated object endpoint route inside your public 'media' bucket
-              const uploadUrl = `${supabaseUrl}/storage/v1/object/media/${data.filename}`
+            if (supabaseUrl && serviceKey && fileObj?.buffer) {
+              const filename = args.data?.filename || fileObj.name
+              const uploadUrl = `${supabaseUrl}/storage/v1/object/media/${filename}`
 
-              // Cast req.file to any to access the direct internal data buffer payload safely
-              const fileObj = req.file as any
-              const fileBuffer = fileObj.buffer
+              // Push the raw, solid file binary buffer straight into your public Supabase storage bucket over HTTP
+              const response = await fetch(uploadUrl, {
+                method: 'POST',
+                headers: {
+                  Authorization: `Bearer ${serviceKey}`,
+                  'Content-Type': fileObj.mimetype || 'image/jpeg',
+                },
+                body: fileObj.buffer,
+              })
 
-              if (fileBuffer) {
-                // Post the raw file data binary stream straight over HTTP to Supabase Storage
-                const response = await fetch(uploadUrl, {
-                  method: 'POST',
-                  headers: {
-                    Authorization: `Bearer ${serviceKey}`,
-                    'Content-Type': fileObj.mimetype || 'image/jpeg',
-                  },
-                  body: fileBuffer,
-                })
-
-                if (!response.ok) {
-                  const errText = await response.text()
-                  console.error('Supabase storage write rejected:', errText)
-                }
+              if (!response.ok) {
+                const errText = await response.text()
+                console.error('Supabase storage write rejected:', errText)
               }
             }
           } catch (err) {
-            console.error('Fatal stream interception failure:', err)
+            console.error('Fatal serverless storage upload stream failure:', err)
           }
         }
-        return data
+        return args
       },
     ],
     afterRead: [
       ({ doc }) => {
-        // Completely format all visual path targets for the browser bundle in production
+        // Force fully format ALL visual asset paths to read directly from your public Supabase bucket CDN
         if (process.env.NODE_ENV === 'production' && doc.filename) {
-          const publicCdnBase = `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/object/public/media/${doc.filename}`
+          const publicCdnUrl = `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/object/public/media/${doc.filename}`
 
-          // 1. Rewrite primary asset URL string target
-          doc.url = publicCdnBase
-
-          // 2. Rewrite row thumbnail preview image path targets expected by Payload admin lists
-          doc.thumbnailURL = publicCdnBase
-          doc.thumbnail_u_r_l = publicCdnBase
-
-          // 3. Clear out missing internal serverless responsive sub-sizes mappings smoothly
+          doc.url = publicCdnUrl
+          doc.thumbnailURL = publicCdnUrl
+          doc.thumbnail_u_r_l = publicCdnUrl
           doc.sizes = {}
         }
         return doc
@@ -75,16 +65,13 @@ export const Media: CollectionConfig = {
     ],
   },
 
-  // Use a conditional assignment to satisfy Vercel's read-only compilation requirements
   upload:
     process.env.NODE_ENV === 'production'
       ? {
-          // Production mode settings (Prevents Vercel disk-writer compilation crashes)
-          disableLocalStorage: true,
+          disableLocalStorage: true, // Safeguards Vercel's read-only file system
           mimeTypes: ['image/*'],
         }
       : {
-          // Your working local development configuration
           staticDir: 'public/media',
           imageSizes: [
             {
