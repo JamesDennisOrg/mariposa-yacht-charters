@@ -10,6 +10,9 @@ import { Itineraries } from './collections/Itineraries'
 import { Bookings } from './collections/Bookings'
 import { BlockedDates } from './collections/BlockedDates'
 
+import { cloudStoragePlugin } from '@payloadcms/plugin-cloud-storage'
+import { s3Storage } from '@payloadcms/storage-s3'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -20,13 +23,7 @@ export default buildConfig({
       titleSuffix: '- Mariposa Charters Admin',
     },
   },
-  collections: [
-    Users,
-    Itineraries, // Registered Itineraries
-    Bookings, // Registered Bookings
-    BlockedDates, // Admin usage for boat maintenence etc
-    Media,
-  ],
+  collections: [Users, Itineraries, Bookings, BlockedDates, Media],
   editor: lexicalEditor({}),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -45,4 +42,23 @@ export default buildConfig({
     },
     push: true,
   }),
+
+  // 2. Add the dynamic plugins array block underneath your database adapter configurations
+  plugins: [
+    s3Storage({
+      collections: {
+        media: true, // Automatically binds S3 storage optimization to your Media collection
+      },
+      bucket: 'media',
+      config: {
+        endpoint: `https://${process.env.MYC_POSTGRES_HOST?.replace('db.', '')}.supabase.co/storage/v1/s3`,
+        region: 'us-east-1',
+        credentials: {
+          accessKeyId: process.env.NEXT_PUBLIC_MYC_SUPABASE_PUBLISHABLE_KEY || '',
+          secretAccessKey: process.env.MYC_SUPABASE_SECRET_KEY || '',
+        },
+        forcePathStyle: true,
+      },
+    }),
+  ],
 })
