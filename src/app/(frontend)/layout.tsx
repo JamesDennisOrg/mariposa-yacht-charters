@@ -7,6 +7,8 @@ import config from '@/payload.config'
 import Header from '@/components/Header'
 import './styles.css'
 
+import 'sharp'
+
 export const dynamic = 'force-dynamic'
 
 const geistSans = Geist({
