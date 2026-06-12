@@ -16,6 +16,7 @@ export const Media: CollectionConfig = {
     process.env.NODE_ENV === 'production'
       ? {
           // Production mode settings (Prevents Vercel disk-writer compilation crashes)
+          staticDir: '/tmp',
           mimeTypes: ['image/*'],
         }
       : {
