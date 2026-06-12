@@ -1,36 +1,42 @@
-// src/collections/Media.ts
 import { CollectionConfig } from 'payload'
 
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
-    read: () => true, // Publicly readable so your frontend can render the images
-    create: ({ req: { user } }) => Boolean(user), // Restrict uploads to logged-in Admin profiles
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
     update: ({ req: { user } }) => Boolean(user),
     delete: ({ req: { user } }) => Boolean(user),
   },
   admin: {
     useAsTitle: 'filename',
   },
-  // Enables Payload's native upload engine logic for this collection
-  upload: {
-    staticDir: 'public/media', // Saves physical files into your local public folder
-    imageSizes: [
-      {
-        name: 'thumbnail',
-        width: 400,
-        height: 300,
-        position: 'centre',
-      },
-      {
-        name: 'hero',
-        width: 1920,
-        height: 1080,
-        position: 'centre',
-      },
-    ],
-    mimeTypes: ['image/*'], // Limit collection strictly to graphic image assets
-  },
+  // Use a conditional assignment to satisfy Vercel's read-only compilation requirements
+  upload:
+    process.env.NODE_ENV === 'production'
+      ? {
+          // Production mode settings (Prevents Vercel disk-writer compilation crashes)
+          mimeTypes: ['image/*'],
+        }
+      : {
+          // Your working local development configuration
+          staticDir: 'public/media',
+          imageSizes: [
+            {
+              name: 'thumbnail',
+              width: 400,
+              height: 300,
+              position: 'centre',
+            },
+            {
+              name: 'hero',
+              width: 1920,
+              height: 1080,
+              position: 'centre',
+            },
+          ],
+          mimeTypes: ['image/*'],
+        },
   fields: [
     {
       name: 'alt',
