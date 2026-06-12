@@ -53,7 +53,8 @@ export default buildConfig({
             },
             bucket: 'media',
             config: {
-              endpoint: `https://${process.env.MYC_POSTGRES_HOST?.replace('db.', '')}.supabase.co/storage/v1/s3`,
+              // Uses your clean, fully formed Supabase URL variable directly to prevent malformed URL segments
+              endpoint: `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/s3`,
               region: 'us-east-1',
               credentials: {
                 accessKeyId: process.env.NEXT_PUBLIC_MYC_SUPABASE_PUBLISHABLE_KEY || '',
