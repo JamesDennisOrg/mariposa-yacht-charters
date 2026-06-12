@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { format } from 'date-fns'
-import { Calendar as CalendarIcon, Loader2 } from 'lucide-react' // Added a loader icon for premium UX feedback
+import { ArrowUpRight, Calendar as CalendarIcon, Loader2 } from 'lucide-react' // Added a loader icon for premium UX feedback
 
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
@@ -84,9 +84,7 @@ export default function BookingForm({ itineraries, unavailableDates }: BookingFo
       className="w-full bg-card text-card-foreground p-8 rounded-2xl border border-border shadow-xl space-y-6 max-w-4xl mx-auto transition-colors duration-200"
     >
       <div>
-        <h3 className="text-2xl font-bold tracking-tight text-foreground">
-          Instantly Book Your Charter
-        </h3>
+        <h3 className="text-2xl font-bold tracking-tight text-foreground">Book Your Charter</h3>
         <p className="text-sm text-muted-foreground mt-1">
           Provide your details below to check availability and proceed to checkout.
         </p>
@@ -106,9 +104,9 @@ export default function BookingForm({ itineraries, unavailableDates }: BookingFo
           <SelectTrigger id="itinerary-select" className="w-full bg-background border-input">
             <SelectValue placeholder="Choose a coastline blueprint trip..." />
           </SelectTrigger>
-          <SelectContent className="bg-popover border-border">
+          <SelectContent className="bg-popover border-border p-1">
             {itineraries.map((trip) => (
-              <SelectItem key={trip.id} value={trip.id.toString()}>
+              <SelectItem key={trip.id} value={trip.id.toString()} className="font-sans">
                 {trip.title} (${trip.price} USD)
               </SelectItem>
             ))}
@@ -130,7 +128,7 @@ export default function BookingForm({ itineraries, unavailableDates }: BookingFo
               className={`w-full justify-start text-left font-normal border-input bg-background h-10 px-3 ${!date && 'text-muted-foreground'}`}
             >
               <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground shrink-0" />
-              {date ? format(date, 'PPP') : <span>Pick a calendar date...</span>}
+              {date ? format(date, 'PPP') : <span>Availability dates...</span>}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0 border-border bg-popover" align="start">
@@ -160,35 +158,33 @@ export default function BookingForm({ itineraries, unavailableDates }: BookingFo
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="customerEmail" className="text-sm font-semibold tracking-wide">
-            Email Address:
-          </Label>
-          <Input
-            type="email"
-            id="customerEmail"
-            name="customerEmail"
-            required
-            placeholder="name@domain.com"
-            disabled={isSubmitting}
-            className="bg-background border-input"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="customerPhone" className="text-sm font-semibold tracking-wide">
-            Phone Contact:
-          </Label>
-          <Input
-            type="tel"
-            id="customerPhone"
-            name="customerPhone"
-            required
-            placeholder="+1 555-000-0000"
-            disabled={isSubmitting}
-            className="bg-background border-input"
-          />
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="customerEmail" className="text-sm font-semibold tracking-wide">
+          Email Address:
+        </Label>
+        <Input
+          type="email"
+          id="customerEmail"
+          name="customerEmail"
+          required
+          placeholder="name@domain.com"
+          disabled={isSubmitting}
+          className="bg-background border-input"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="customerPhone" className="text-sm font-semibold tracking-wide">
+          Phone Contact:
+        </Label>
+        <Input
+          type="tel"
+          id="customerPhone"
+          name="customerPhone"
+          required
+          placeholder="+1 555-000-0000"
+          disabled={isSubmitting}
+          className="bg-background border-input"
+        />
       </div>
 
       <div className="space-y-2">
@@ -212,7 +208,9 @@ export default function BookingForm({ itineraries, unavailableDates }: BookingFo
       <Button
         type="submit"
         disabled={!date || !selectedItinerary || isSubmitting}
-        className="w-full text-base font-bold h-12 transition-all mt-4 shadow-sm"
+        variant={'outline'}
+        size={'lg'}
+        className="w-full cursor-pointer hover:gap-3 hover:bg-green-300! hover:text-background transition-all duration-300"
       >
         {isSubmitting ? (
           <>
@@ -220,7 +218,10 @@ export default function BookingForm({ itineraries, unavailableDates }: BookingFo
             Connecting to Secure Payments...
           </>
         ) : (
-          'Continue to Secure Checkout'
+          <>
+            Continue to Secure Checkout
+            <ArrowUpRight />
+          </>
         )}
       </Button>
     </form>

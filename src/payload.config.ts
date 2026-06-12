@@ -3,6 +3,7 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
+import { Media } from './collections/Media'
 
 import { Users } from './collections/Users'
 import { Itineraries } from './collections/Itineraries'
@@ -15,8 +16,6 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   admin: {
     user: Users.slug,
-    // Forces Next.js/Vercel to bundle the entire generated admin area dynamically
-    // bundler: 'vite',
     meta: {
       titleSuffix: '- Mariposa Charters Admin',
     },
@@ -26,6 +25,7 @@ export default buildConfig({
     Itineraries, // Registered Itineraries
     Bookings, // Registered Bookings
     BlockedDates, // Admin usage for boat maintenence etc
+    Media,
   ],
   editor: lexicalEditor({}),
   secret: process.env.PAYLOAD_SECRET || '',

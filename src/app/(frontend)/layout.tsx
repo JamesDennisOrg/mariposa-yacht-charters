@@ -1,7 +1,13 @@
 import React from 'react'
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { headers as getHeaders } from 'next/headers'
+import { getPayload } from 'payload'
+import config from '@/payload.config'
+import Header from '@/components/Header'
 import './styles.css'
+
+export const dynamic = 'force-dynamic'
 
 const geistSans = Geist({
   variable: '--font-sans',
@@ -19,11 +25,18 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
+  const clientHeaders = await getHeaders()
+  const payloadConfig = await config
+  const payload = await getPayload({ config: payloadConfig })
+  const { user } = await payload.auth({ headers: clientHeaders })
   const { children } = props
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Header user={user} />
+        <main className="flex-1 w-full">{children}</main>
+      </body>
     </html>
   )
 }

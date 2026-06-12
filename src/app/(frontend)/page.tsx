@@ -5,6 +5,7 @@ import config from '@/payload.config'
 import BookingForm from '@/components/BookingForm'
 import Link from 'next/link'
 import { headers as getNextHeaders } from 'next/headers'
+import Image from 'next/image'
 import {
   Card,
   CardContent,
@@ -13,23 +14,21 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { LogIn } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 
 export default async function HomePage() {
-  // Call the native Next.js headers function
   const clientHeaders = await getNextHeaders()
-
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
 
-  // Pass the headers into the auth client to extract the current user account row
+  // Extract the current authenticated user account
   const { user } = await payload.auth({ headers: clientHeaders })
 
   // 1. Fetch our active Mexican itineraries from Supabase
   const itinerariesData = await payload.find({
     collection: 'itineraries',
+    depth: 1,
   })
 
   // 2. Fetch all confirmed bookings to discover busy slots
@@ -47,7 +46,7 @@ export default async function HomePage() {
     limit: 100,
   })
 
-  // Standardize dates into simple 'YYYY-MM-DD' strings for html parsing
+  // Standardize dates into simple 'YYYY-MM-DD' strings for parsing
   const bookedDatesStrings = confirmedBookings.docs.map(
     (b) => new Date(b.bookingDate).toISOString().split('T')[0],
   )
@@ -58,104 +57,113 @@ export default async function HomePage() {
 
   const masterUnavailableDates = [...bookedDatesStrings, ...manualBlockedStrings]
 
-  // Create clean, lightweight mappings for our interactive selector fields
+  // Create clean mappings for our interactive selector fields
   const simplifiedItineraries = itinerariesData.docs.map((i) => ({
-    id: i.id, // Safely maps as a number compiled out of Supabase
+    id: i.id,
     title: i.title,
     price: i.price,
   }))
 
   return (
-    <div className="p-10 font-sans max-w-6xl mx-auto min-h-screen">
-      <header style={{ marginBottom: '2.5rem' }}>
-        <nav className="flex justify-between items-center pb-6 mb-10 border-b">
-          <div>
-            <h1 className="text-3xl font-extrabold tracking-tight m-0">Mariposa Yacht Charters</h1>
-            <p className="text-sm mt-1">
-              Premium daily hire along the breathtaking Mexican coastline.
-            </p>
-          </div>
-
-          {/* Dynamic Admin Action Button */}
-          <div>
-            {user ? (
-              <Link
-                href="/admin"
-                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-sm font-semibold shadow-sm transition-all"
-              >
-                Admin Dashboard ({user.email})
-              </Link>
-            ) : (
-              <Link href="/admin/login">
-                <Button
-                  variant={'link'}
-                  className="cursor-pointer text-muted-foreground hover:text-primary transition-all duration-300 hover:no-underline"
-                >
-                  Staff Login
-                  <LogIn />
-                </Button>
-              </Link>
-            )}
-          </div>
-        </nav>
-      </header>
-
-      <section className="mb-16">
-        <h2 className="text-2xl font-bold mb-6 text-foreground tracking-tight">
-          Our Daily Excursions
-        </h2>
-
-        {/* Fluid 2-Column CSS Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {itinerariesData.docs.map((trip) => (
-            <Link
-              href={`/excursions/${trip.id}`}
-              key={trip.id}
-              className="group block no-underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-xl transition-all hover:scale-102 active:scale-98"
-            >
-              <Card className="h-full flex flex-col justify-between border-border bg-card text-card-foreground shadow-sm hover:shadow-md hover:border-primary/50 group-hover:border-primary/30 transition-all cursor-pointer overflow-hidden">
-                <CardHeader className="p-6 pb-3">
-                  <CardTitle className="text-xl font-bold tracking-tight text-slate-800 dark:text-slate-100 group-hover:text-primary transition-colors">
-                    {trip.title}
-                  </CardTitle>
-                  <Badge
-                    variant={'outline'}
-                    className="group-hover:bg-muted-foreground group-hover:text-background transition-all"
-                  >
-                    View Route
-                  </Badge>
-                </CardHeader>
-                <CardContent className="p-6 pt-0 pb-6">
-                  <CardDescription className="text-muted-foreground text-sm leading-relaxed line-clamp-3">
-                    {trip.description}
-                  </CardDescription>
-                </CardContent>
-                <CardFooter className="p-6 pt-4 border-t border-border bg-slate-50/50 dark:bg-slate-900/30 flex justify-between text-xs font-medium text-muted-foreground">
-                  <Badge variant={'secondary'}>
-                    <strong>Duration:</strong> {trip.duration} Hours
-                  </Badge>
-                  <Badge variant={'outline'}>${trip.price} usd</Badge>
-                </CardFooter>
-              </Card>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Section 2: Full Width Booking Form Area underneath */}
-      <section>
-        <div className="max-w-200 my-8 mx-auto">
-          <h2 className="text-3xl mb-4 text-center">Secure Your Dates</h2>
-          <p className="text-center mb-4">
-            Select an excursion package and check real-time availability below.
-          </p>
-
+    <div className="px-6 md:px-10 py-10 font-sans max-w-7xl mx-auto min-h-screen">
+      {/* 
+        Master Layout: 12-Column Responsive Flex-Grid 
+        - Stacks vertically on mobile/tablet (grid-cols-1)
+        - Breaks into Sidebar + Main Content layout on desktops (lg:grid-cols-12)
+      */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        {/* 
+          PANE 1: Floating Sticky Booking Form Sidebar (4 Columns out of 12)
+          - lg:sticky & lg:top-6 forces this box to remain pinned as the user scrolls
+          - order-last lg:order-first keeps form beneath content on mobile but pins it to the left on desktop
+        */}
+        <aside className="grid-cols-1 lg:col-span-4 order-last lg:order-first lg:sticky lg:top-6 pr-4 border-r">
           <BookingForm
             itineraries={simplifiedItineraries}
             unavailableDates={masterUnavailableDates}
           />
-        </div>
-      </section>
+        </aside>
+
+        {/* 
+          PANE 2: Main Dynamic Excursion Brochure Grid (8 Columns out of 12)
+        */}
+        <main className="grid-cols-1 lg:col-span-8 space-y-6">
+          <h2 className="text-2xl font-bold text-foreground tracking-tight">
+            Our Daily Excursions
+          </h2>
+
+          {/* Flexible Internal Grid for the Excursion Itinerary Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {itinerariesData.docs.map((trip) => {
+              const hasImage = trip.featuredImage && typeof trip.featuredImage === 'object'
+              const imageUrl = hasImage ? (trip.featuredImage as any).url : null
+              const imageAlt = hasImage ? (trip.featuredImage as any).alt : trip.title
+
+              return (
+                <Link
+                  href={`/excursions/${trip.id}`}
+                  key={trip.id}
+                  className="group block no-underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  <Card className="relative h-full min-h-95 flex flex-col justify-between border-border bg-slate-900 text-white shadow-sm hover:shadow-xl hover:border-primary/50 group-hover:border-primary/30 transition-all cursor-pointer overflow-hidden">
+                    {/* Absolute Background Image Asset Wrapper */}
+                    {imageUrl ? (
+                      <>
+                        <Image
+                          src={imageUrl}
+                          alt={imageAlt || trip.title}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          priority
+                        />
+                        {/* Dark Gradient Scrim Overlay Layer */}
+                        <div className="absolute inset-0 bg-linear-to-t from-black/95 via-black/50 to-black/20 z-10 transition-opacity duration-300 group-hover:opacity-90" />
+                      </>
+                    ) : (
+                      <div className="absolute inset-0 bg-slate-800 z-10" />
+                    )}
+
+                    {/* Core Content Containers raised to z-20 over backdrop */}
+                    <CardHeader className="p-6 pb-3 relative z-20">
+                      <CardTitle className="text-2xl font-black tracking-tight text-white group-hover:text-primary transition-colors drop-shadow-md">
+                        {trip.title}
+                      </CardTitle>
+                      <div className="pt-2">
+                        <Badge
+                          variant="outline"
+                          className="-translate-y-4 opacity-0 bg-white/10 text-white border-white/20 backdrop-blur-sm group-hover:bg-card group-hover:text-white group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+                        >
+                          View Itinerary
+                          <ArrowUpRight className="ml-1 h-3 w-3" />
+                        </Badge>
+                      </div>
+                    </CardHeader>
+
+                    <CardContent className="p-6 pt-0 pb-6 relative z-20 mt-auto">
+                      <CardDescription className="text-slate-200 text-sm font-normal leading-relaxed line-clamp-3">
+                        {trip.description}
+                      </CardDescription>
+                    </CardContent>
+
+                    <CardFooter className="p-6 pt-4 relative z-20 border-t border-white/10 bg-black/40 backdrop-blur-md flex justify-between text-xs font-semibold text-white">
+                      <Badge variant="outline" className="text-white border-white/20">
+                        <strong>Duration:</strong>&nbsp;{trip.duration} Hours
+                      </Badge>
+                      <Badge
+                        variant="outline"
+                        className="text-white border-white/20 px-2.5 py-1 text-sm font-bold"
+                      >
+                        ${trip.price} USD
+                      </Badge>
+                    </CardFooter>
+                  </Card>
+                </Link>
+              )
+            })}
+          </div>
+        </main>
+      </div>
     </div>
   )
 }
