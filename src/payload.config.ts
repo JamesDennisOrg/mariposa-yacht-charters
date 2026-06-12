@@ -54,12 +54,19 @@ export default buildConfig({
             config: {
               endpoint: `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/s3`,
               region: 'us-east-1',
-              // 2. The server-guarded master credentials belong strictly inside the s3Storage block here!
               credentials:
                 typeof window === 'undefined'
                   ? {
-                      accessKeyId: process.env.MYC_POSTGRES_USER || 'postgres',
-                      secretAccessKey: process.env.MYC_POSTGRES_PASSWORD || '',
+                      // Strips "sb_publishable_" so the AWS SDK passes a raw cryptographic key token
+                      accessKeyId: (
+                        process.env.NEXT_PUBLIC_MYC_SUPABASE_PUBLISHABLE_KEY || ''
+                      ).replace('sb_publishable_', ''),
+
+                      // Strips "sb_secret_" so the AWS SDK passes a raw cryptographic secret token
+                      secretAccessKey: (process.env.MYC_SUPABASE_SECRET_KEY || '').replace(
+                        'sb_secret_',
+                        '',
+                      ),
                     }
                   : {
                       accessKeyId: 'mock',
