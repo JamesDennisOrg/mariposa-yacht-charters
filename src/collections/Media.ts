@@ -1,5 +1,3 @@
-'use client'
-
 import { CollectionConfig } from 'payload'
 
 export const Media: CollectionConfig = {
