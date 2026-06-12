@@ -70,6 +70,7 @@ export default async function HomePage() {
         Master Layout: 12-Column Responsive Flex-Grid 
         - Stacks vertically on mobile/tablet (grid-cols-1)
         - Breaks into Sidebar + Main Content layout on desktops (lg:grid-cols-12)
+        - Use this line to force a refresh of the git repository
       */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         {/* 
