@@ -53,18 +53,24 @@ export default buildConfig({
             config: {
               endpoint: `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/s3`,
               region: 'us-east-1',
-              // Enforces direct database role verification to authorize S3 signature validation handshakes
+              // Maps your credentials directly to your project ID and native JWT signing secrets
               credentials:
                 typeof window === 'undefined'
                   ? {
-                      accessKeyId: process.env.MYC_POSTGRES_USER || 'postgres',
-                      secretAccessKey: process.env.MYC_POSTGRES_PASSWORD || '',
+                      // 1. Extract the raw project reference ID out of your Supabase URL
+                      accessKeyId:
+                        process.env.NEXT_PUBLIC_MYC_SUPABASE_URL?.replace('https://', '').split(
+                          '.',
+                        )[0] || '',
+
+                      // 2. Map directly to your master JWT secret token parameter string
+                      secretAccessKey: process.env.MYC_SUPABASE_JWT_SECRET || '',
                     }
                   : {
                       accessKeyId: 'mock',
                       secretAccessKey: 'mock',
                     },
-              forcePathStyle: true, // Mandated configuration property rule for Supabase instances
+              forcePathStyle: true,
             },
           }),
         ]
