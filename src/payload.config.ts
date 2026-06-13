@@ -35,7 +35,7 @@ export default buildConfig({
         process.env.DATABASE_URL ||
         process.env.MYC_POSTGRES_URL ||
         '',
-      max: 5,
+      max: process.env.NODE_ENV === 'production' ? 5 : 20, //Set to 5 for vercel connection limits / 20 for local dev
       idleTimeoutMillis: 10000,
       connectionTimeoutMillis: 5000,
     },

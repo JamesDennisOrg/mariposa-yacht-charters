@@ -20,9 +20,11 @@ export default function Header({ user }: HeaderProps) {
             href="/"
             className="hover:opacity-90 transition-opacity block no-underline text-foreground"
           >
-            <h1 className="text-3xl font-extrabold tracking-tight m-0">Mariposa Yacht Charters</h1>
+            <h1 className="text-5xl font-extrabold tracking-tight m-0 text-transparent bg-linear-to-r bg-clip-text from-blue-300 to-blue-700 ">
+              Mariposa Yacht Charters
+            </h1>
           </Link>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm text-muted-foreground mt-1 font-sans">
             Premium daily hire along the breathtaking Mexican coastline.
           </p>
         </div>
