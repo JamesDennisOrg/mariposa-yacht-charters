@@ -15,28 +15,32 @@ export const Media: CollectionConfig = {
   hooks: {
     beforeOperation: [
       async ({ args, operation }) => {
-        // Safe check for both standard and serverless fallback file containers
-        const reqFile = args.req?.file || (args.req as any)?.fallbackFile
-
-        if (process.env.NODE_ENV === 'production' && operation === 'create' && reqFile) {
+        // Intercept file payloads natively at the beginning of form submissions in production
+        if (process.env.NODE_ENV === 'production' && operation === 'create' && args.req?.file) {
           try {
             const supabaseUrl = process.env.NEXT_PUBLIC_MYC_SUPABASE_URL
             const serviceKey =
               process.env.MYC_SUPABASE_SECRET_KEY || process.env.MYC_SUPABASE_SERVICE_ROLE_KEY
-            const fileObj = reqFile as any
 
-            if (supabaseUrl && serviceKey && fileObj?.buffer) {
+            const fileObj = args.req.file as any
+
+            if (supabaseUrl && serviceKey && fileObj) {
               const filename = args.data?.filename || fileObj.name || fileObj.filename
               const uploadUrl = `${supabaseUrl}/storage/v1/object/media/${filename}`
 
-              // Push the raw, solid file binary buffer straight into your public Supabase storage bucket over HTTP
+              // Pack the raw file data using standard web Blob parameters to safely handle serverless stream pipes
+              const fileBlob = new Blob([fileObj.buffer || fileObj], {
+                type: fileObj.mimetype || 'image/jpeg',
+              })
+
+              // Stream the data securely over HTTP using standard web protocols
               const response = await fetch(uploadUrl, {
                 method: 'POST',
                 headers: {
                   Authorization: `Bearer ${serviceKey}`,
                   'Content-Type': fileObj.mimetype || 'image/jpeg',
                 },
-                body: fileObj.buffer,
+                body: fileBlob,
               })
 
               if (!response.ok) {
