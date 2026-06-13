@@ -30,7 +30,6 @@ export default buildConfig({
   },
   db: postgresAdapter({
     pool: {
-      // 1. Force Vercel to check the transaction pooler URL first to stop EMAXCONNSESSION errors
       connectionString:
         process.env.MYC_POSTGRES_PRISMA_URL ||
         process.env.DATABASE_URL ||
@@ -46,29 +45,28 @@ export default buildConfig({
   plugins:
     process.env.NODE_ENV === 'production'
       ? [
-          // s3Storage({
-          //   collections: {
-          //     media: true,
-          //   },
-          //   bucket: 'media',
-          //   config: {
-          //     endpoint: `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/s3`,
-          //     region: 'us-east-1',
-          //     credentials:
-          //       typeof window === 'undefined'
-          //         ? {
-          //             // 1. Pass your database username ("postgres") as the S3 access key
-          //             accessKeyId: process.env.MYC_POSTGRES_USER || 'postgres',
-          //             // 2. Pass your database password ("g9P7OHpzhP5oH0pi") as the S3 secret key
-          //             secretAccessKey: process.env.MYC_POSTGRES_PASSWORD || '',
-          //           }
-          //         : {
-          //             accessKeyId: 'mock',
-          //             secretAccessKey: 'mock',
-          //           },
-          //     forcePathStyle: true,
-          //   },
-          // }),
+          s3Storage({
+            collections: {
+              media: true,
+            },
+            bucket: 'media',
+            config: {
+              endpoint: `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/s3`,
+              region: 'us-east-1',
+              // Enforces direct database role verification to authorize S3 signature validation handshakes
+              credentials:
+                typeof window === 'undefined'
+                  ? {
+                      accessKeyId: process.env.MYC_POSTGRES_USER || 'postgres',
+                      secretAccessKey: process.env.MYC_POSTGRES_PASSWORD || '',
+                    }
+                  : {
+                      accessKeyId: 'mock',
+                      secretAccessKey: 'mock',
+                    },
+              forcePathStyle: true, // Mandated configuration property rule for Supabase instances
+            },
+          }),
         ]
       : [],
 })
