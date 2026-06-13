@@ -38,6 +38,7 @@ export const Media: CollectionConfig = {
                 method: 'POST',
                 headers: {
                   Authorization: `Bearer ${serviceKey}`,
+                  apiKey: serviceKey, // Crucial: Satisfies Supabase's native REST JWT gateway token checks
                   'Content-Type': fileObj.mimetype || 'image/jpeg',
                 },
                 body: fileBlob,
