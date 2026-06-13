@@ -15,16 +15,18 @@ export const Media: CollectionConfig = {
   hooks: {
     beforeOperation: [
       async ({ args, operation }) => {
-        // Intercept raw image bytes at the absolute beginning of a form submission in production
-        if (process.env.NODE_ENV === 'production' && operation === 'create' && args.req?.file) {
+        // Safe check for both standard and serverless fallback file containers
+        const reqFile = args.req?.file || (args.req as any)?.fallbackFile
+
+        if (process.env.NODE_ENV === 'production' && operation === 'create' && reqFile) {
           try {
             const supabaseUrl = process.env.NEXT_PUBLIC_MYC_SUPABASE_URL
             const serviceKey =
               process.env.MYC_SUPABASE_SECRET_KEY || process.env.MYC_SUPABASE_SERVICE_ROLE_KEY
-            const fileObj = args.req.file as any
+            const fileObj = reqFile as any
 
             if (supabaseUrl && serviceKey && fileObj?.buffer) {
-              const filename = args.data?.filename || fileObj.name
+              const filename = args.data?.filename || fileObj.name || fileObj.filename
               const uploadUrl = `${supabaseUrl}/storage/v1/object/media/${filename}`
 
               // Push the raw, solid file binary buffer straight into your public Supabase storage bucket over HTTP
