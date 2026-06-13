@@ -53,18 +53,16 @@ export default buildConfig({
             config: {
               endpoint: `${process.env.NEXT_PUBLIC_MYC_SUPABASE_URL}/storage/v1/s3`,
               region: 'us-east-1',
-              // Maps your credentials directly to your project ID and native JWT signing secrets
+              // Enforces direct cryptographic S3 validation handshake routing
               credentials:
                 typeof window === 'undefined'
                   ? {
-                      // 1. Extract the raw project reference ID out of your Supabase URL
-                      accessKeyId:
-                        process.env.NEXT_PUBLIC_MYC_SUPABASE_URL?.replace('https://', '').split(
-                          '.',
-                        )[0] || '',
+                      // 1. Paste your exact uppercase "Access Key ID" string from Supabase here:
+                      accessKeyId: '4008e9573075c4df51dfa6bcc43c7559',
 
-                      // 2. Map directly to your master JWT secret token parameter string
-                      secretAccessKey: process.env.MYC_SUPABASE_JWT_SECRET || '',
+                      // 2. Paste your exact "Secret Access Key" string from Supabase here:
+                      secretAccessKey:
+                        'd22bc47ac2a2b586ab5b3db750ad66e29adf59ab8426d14a1d5428dd0d08e2a7',
                     }
                   : {
                       accessKeyId: 'mock',
