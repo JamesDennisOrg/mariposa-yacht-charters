@@ -28,20 +28,24 @@ export const Media: CollectionConfig = {
               const filename = args.data?.filename || fileObj.name || fileObj.filename
               const uploadUrl = `${supabaseUrl}/storage/v1/object/media/${filename}`
 
-              // Pack the raw file data using standard web Blob parameters to safely handle serverless stream pipes
-              const fileBlob = new Blob([fileObj.buffer || fileObj], {
-                type: fileObj.mimetype || 'image/jpeg',
-              })
+              // Unpack the true binary image bytes safely from the serverless form stream context
+              let rawData: Uint8Array
+              if (fileObj.buffer) {
+                rawData = new Uint8Array(fileObj.buffer)
+              } else {
+                const arrayBuffer = await fileObj.arrayBuffer()
+                rawData = new Uint8Array(arrayBuffer)
+              }
 
-              // Stream the data securely over HTTP using standard web protocols
+              // Post the actual raw cryptographic file bytes straight to Supabase Storage
               const response = await fetch(uploadUrl, {
                 method: 'POST',
                 headers: {
                   Authorization: `Bearer ${serviceKey}`,
-                  apiKey: serviceKey, // Crucial: Satisfies Supabase's native REST JWT gateway token checks
+                  apiKey: serviceKey,
                   'Content-Type': fileObj.mimetype || 'image/jpeg',
                 },
-                body: fileBlob,
+                body: rawData, // Sends the physical image data over the network channel cleanly
               })
 
               if (!response.ok) {
