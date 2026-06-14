@@ -13,7 +13,7 @@ interface HeaderProps {
 
 export default function Header({ user }: HeaderProps) {
   return (
-    <header className="w-full mx-auto px-6 py-2 fixed top-0 z-9999 backdrop-blur-md">
+    <header className="w-full mx-auto px-6 py-2 fixed top-0 z-9999 bg-black/5 backdrop-blur-md">
       <nav className="flex justify-between items-center lg:max-w-7xl mx-auto pb-2">
         <div>
           <Link href="/" className="">

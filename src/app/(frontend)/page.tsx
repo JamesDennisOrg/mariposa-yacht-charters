@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, CalendarDays, CalendarSearch } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export default async function HomePage() {
@@ -78,6 +78,7 @@ export default async function HomePage() {
         {/* Full-Bleed High-Definition Yachting Backdrop Video Component Layer */}
         <div className="absolute inset-0 w-full h-full object-cover z-10 transition-transform">
           <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+            hero-video-loop
             <source src="/hero-video-loop.mp4" type="video/mp4" />
           </video>
           {/* Subtle overlay gradient to mesh with dark/light background variants */}
@@ -88,7 +89,7 @@ export default async function HomePage() {
         <div className="relative z-30 text-center max-w-3xl mx-auto space-y-6 px-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 backdrop-blur-md shadow-sm">
             <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
-            <span className="text-xs font-bold uppercase tracking-widest text-foreground/90">
+            <span className="text-xs font-bold uppercase tracking-widest text-white">
               Premium Yacht Charter
             </span>
           </div>
@@ -107,14 +108,16 @@ export default async function HomePage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center pt-2">
-            <Link href={'#book-now'}>
+            <Link href={'#book-now'} className="hover:-translate-y-1 transition-transform">
               <Button className="cursor-pointer w-full h-10 px-6 py-4 border border-cyan-800">
                 Book Private Charter
+                <CalendarDays />
               </Button>
             </Link>
-            <Link href={'#book-now'}>
-              <Button className="cursor-pointer w-full h-10 px-6 py-4 bg-transparent border border-cyan-800">
+            <Link href={'#book-now'} className="hover:-translate-y-1 transition-transform">
+              <Button className="text-white cursor-pointer w-full h-10 px-6 py-4 bg-transparent border border-cyan-800 backdrop-blur-md">
                 Explore Itineraries
+                <CalendarSearch />
               </Button>
             </Link>
           </div>
@@ -126,7 +129,7 @@ export default async function HomePage() {
         className="grid grid-cols-1 lg:grid-cols-12 lg:max-w-7xl mx-auto gap-10 py-10 scroll-mt-20"
         id="book-now"
       >
-        <aside className="grid-cols-1 lg:col-span-4 order-last lg:order-first pr-6 border-r">
+        <aside className="grid-cols-1 lg:col-span-4 order-last lg:order-first pr-6 border-r place-items-center place-content-center">
           <BookingForm
             itineraries={simplifiedItineraries}
             unavailableDates={masterUnavailableDates}
@@ -134,9 +137,9 @@ export default async function HomePage() {
         </aside>
 
         <main className="grid-cols-1 lg:col-span-8 space-y-6">
-          <h2 className="text-2xl font-bold text-foreground tracking-tight">
+          {/* <h2 className="text-2xl font-bold text-foreground tracking-tight">
             Our Daily Excursions
-          </h2>
+          </h2> */}
 
           {/* Flexible Internal Grid for the Excursion Itinerary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
