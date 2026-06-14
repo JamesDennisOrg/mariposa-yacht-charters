@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ArrowUpRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 export default async function HomePage() {
   const clientHeaders = await getNextHeaders()
@@ -65,29 +66,73 @@ export default async function HomePage() {
   }))
 
   return (
-    <div className="px-6 md:px-10 py-10 font-sans max-w-7xl mx-auto min-h-screen">
-      {/* 
-        Master Layout: 12-Column Responsive Flex-Grid 
-        - Stacks vertically on mobile/tablet (grid-cols-1)
-        - Breaks into Sidebar + Main Content layout on desktops (lg:grid-cols-12)
-        - Use this line to force a refresh of the git repository
-      */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        {/* 
-          PANE 1: Floating Sticky Booking Form Sidebar (4 Columns out of 12)
-          - lg:sticky & lg:top-6 forces this box to remain pinned as the user scrolls
-          - order-last lg:order-first keeps form beneath content on mobile but pins it to the left on desktop
-        */}
-        <aside className="grid-cols-1 lg:col-span-4 order-last lg:order-first lg:sticky lg:top-6 pr-4 border-r">
+    <div className="font-sans mx-auto min-h-screen">
+      {/* Hero Section  */}
+      <section className="relative w-full overflow-hidden min-h-screen flex items-center justify-center p-6 md:p-12 mb-12">
+        {/* Multi-Layer Ambient Mesh Backdrop Flow Effect */}
+        {/* <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40 mix-blend-screen z-0"> */}
+        {/* <div className="absolute top-[-25%] left-[-10%] w-[65vw] h-[65vw] bg-cyan-400/25 blur-[130px]" /> */}
+        {/* <div className="absolute bottom-[-30%] right-[-10%] w-[60vw] h-[60vw] bg-teal-500/20 blur-[150px]" /> */}
+        {/* </div> */}
+
+        {/* Full-Bleed High-Definition Yachting Backdrop Video Component Layer */}
+        <div className="absolute inset-0 w-full h-full object-cover z-10 transition-transform">
+          <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+            <source src="/hero-video-loop.mp4" type="video/mp4" />
+          </video>
+          {/* Subtle overlay gradient to mesh with dark/light background variants */}
+          {/* <div className="absolute inset-0 z-20" /> */}
+        </div>
+
+        {/* Floating Typography Context Layout Matrix Container */}
+        <div className="relative z-30 text-center max-w-3xl mx-auto space-y-6 px-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 backdrop-blur-md shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+            <span className="text-xs font-bold uppercase tracking-widest text-foreground/90">
+              Premium Yacht Charter
+            </span>
+          </div>
+
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter leading-[1.1] text-foreground">
+            Experience the Sea in
+            <br />
+            <span className="ml-1 bg-linear-to-r from-teal-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent drop-shadow-md">
+              Absolute Luxury
+            </span>
+          </h1>
+
+          <p className="text-base sm:text-lg text-muted-foreground font-medium max-w-xl mx-auto leading-relaxed">
+            Secure your private daily voyage, bespoke inclusions, and premium crew manifests across
+            Mexico's most exclusive coastal routes.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center pt-2">
+            <Link href={'#book-now'}>
+              <Button className="cursor-pointer w-full h-10 px-6 py-4 border border-cyan-800">
+                Book Private Charter
+              </Button>
+            </Link>
+            <Link href={'#book-now'}>
+              <Button className="cursor-pointer w-full h-10 px-6 py-4 bg-transparent border border-cyan-800">
+                Explore Itineraries
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content  */}
+      <div
+        className="grid grid-cols-1 lg:grid-cols-12 lg:max-w-7xl mx-auto gap-10 py-10 scroll-mt-20"
+        id="book-now"
+      >
+        <aside className="grid-cols-1 lg:col-span-4 order-last lg:order-first pr-6 border-r">
           <BookingForm
             itineraries={simplifiedItineraries}
             unavailableDates={masterUnavailableDates}
           />
         </aside>
 
-        {/* 
-          PANE 2: Main Dynamic Excursion Brochure Grid (8 Columns out of 12)
-        */}
         <main className="grid-cols-1 lg:col-span-8 space-y-6">
           <h2 className="text-2xl font-bold text-foreground tracking-tight">
             Our Daily Excursions

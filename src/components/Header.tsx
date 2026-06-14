@@ -13,18 +13,15 @@ interface HeaderProps {
 
 export default function Header({ user }: HeaderProps) {
   return (
-    <header className="w-full max-w-7xl mx-auto px-6 py-6">
-      <nav className="flex justify-between items-center pb-4 border-b border-border">
+    <header className="w-full mx-auto px-6 py-2 fixed top-0 z-9999 backdrop-blur-md">
+      <nav className="flex justify-between items-center lg:max-w-7xl mx-auto pb-2">
         <div>
-          <Link
-            href="/"
-            className="hover:opacity-90 transition-opacity block no-underline text-foreground"
-          >
-            <h1 className="text-5xl font-extrabold tracking-tight m-0 text-transparent bg-linear-to-r bg-clip-text from-blue-300 to-blue-700 ">
+          <Link href="/" className="">
+            <h1 className="text-[2.2vw] font-extrabold tracking-tight m-0 bg-linear-to-r from-teal-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
               Mariposa Yacht Charters
             </h1>
           </Link>
-          <p className="text-sm text-muted-foreground mt-1 font-sans">
+          <p className="text-sm text-white/65 -mt-2 font-sans">
             Premium daily hire along the breathtaking Mexican coastline.
           </p>
         </div>
@@ -41,7 +38,7 @@ export default function Header({ user }: HeaderProps) {
             <Link href="/admin/login">
               <Button
                 variant="link"
-                className="cursor-pointer text-muted-foreground hover:text-primary transition-all duration-300 hover:no-underline gap-2"
+                className="cursor-pointer text-cyan-500 hover:text-primary transition-all duration-300 hover:no-underline gap-2"
               >
                 Staff Login
                 <LogIn className="h-4 w-4" />
