@@ -68,15 +68,8 @@ export default async function HomePage() {
   return (
     <div className="font-sans mx-auto min-h-screen">
       {/* Hero Section  */}
-      <section className="relative w-full overflow-hidden min-h-screen flex items-center justify-center p-6 md:p-12 mb-12">
-        {/* Multi-Layer Ambient Mesh Backdrop Flow Effect */}
-        {/* <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40 mix-blend-screen z-0"> */}
-        {/* <div className="absolute top-[-25%] left-[-10%] w-[65vw] h-[65vw] bg-cyan-400/25 blur-[130px]" /> */}
-        {/* <div className="absolute bottom-[-30%] right-[-10%] w-[60vw] h-[60vw] bg-teal-500/20 blur-[150px]" /> */}
-        {/* </div> */}
-
-        {/* Full-Bleed High-Definition Yachting Backdrop Video Component Layer */}
-        <div className="absolute inset-0 w-full h-full object-cover z-10 transition-transform">
+      <section className="w-full overflow-hidden min-h-screen flex items-center justify-center p-6 md:p-12 mb-12">
+        <div className="absolute inset-0 w-full h-full object-cover transition-transform">
           <video autoPlay loop muted playsInline className="w-full h-full object-cover">
             hero-video-loop
             <source src="/hero-video-loop.mp4" type="video/mp4" />
@@ -85,8 +78,7 @@ export default async function HomePage() {
           {/* <div className="absolute inset-0 z-20" /> */}
         </div>
 
-        {/* Floating Typography Context Layout Matrix Container */}
-        <div className="relative z-30 text-center max-w-3xl mx-auto space-y-6 px-4">
+        <div className="relative text-center max-w-3xl mx-auto space-y-6 px-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 backdrop-blur-md shadow-sm">
             <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
             <span className="text-xs font-bold uppercase tracking-widest text-white">
@@ -97,7 +89,7 @@ export default async function HomePage() {
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter leading-[1.1] text-foreground">
             Experience the Sea in
             <br />
-            <span className="ml-1 bg-linear-to-r from-teal-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent drop-shadow-md">
+            <span className="ml-1 bg-linear-to-r from-teal-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent drop-shadow-sm drop-shadow-black">
               Absolute Luxury
             </span>
           </h1>
@@ -108,13 +100,13 @@ export default async function HomePage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center pt-2">
-            <Link href={'#book-now'} className="hover:-translate-y-1 transition-transform">
+            <Link href={'#book-now'} className="w-full hover:-translate-y-1 transition-transform">
               <Button className="cursor-pointer w-full h-10 px-6 py-4 border border-cyan-800">
                 Book Private Charter
                 <CalendarDays />
               </Button>
             </Link>
-            <Link href={'#book-now'} className="hover:-translate-y-1 transition-transform">
+            <Link href={'#book-now'} className="w-full hover:-translate-y-1 transition-transform">
               <Button className="text-white cursor-pointer w-full h-10 px-6 py-4 bg-transparent border border-cyan-800 backdrop-blur-md">
                 Explore Itineraries
                 <CalendarSearch />
@@ -126,22 +118,17 @@ export default async function HomePage() {
 
       {/* Main Content  */}
       <div
-        className="grid grid-cols-1 lg:grid-cols-12 lg:max-w-7xl mx-auto gap-10 py-10 scroll-mt-20"
+        className="grid grid-cols-1 lg:grid-cols-12 lg:max-w-7xl mx-auto gap-10 px-2 mb-16 lg:py-20 scroll-mt-0"
         id="book-now"
       >
-        <aside className="grid-cols-1 lg:col-span-4 order-last lg:order-first pr-6 border-r place-items-center place-content-center">
+        <aside className="grid-cols-1 lg:col-span-4 order-last lg:order-first lg:pr-6 place-items-center place-content-center">
           <BookingForm
             itineraries={simplifiedItineraries}
             unavailableDates={masterUnavailableDates}
           />
         </aside>
 
-        <main className="grid-cols-1 lg:col-span-8 space-y-6">
-          {/* <h2 className="text-2xl font-bold text-foreground tracking-tight">
-            Our Daily Excursions
-          </h2> */}
-
-          {/* Flexible Internal Grid for the Excursion Itinerary Cards */}
+        <div className="grid-cols-1 lg:col-span-8 space-y-6 py-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {itinerariesData.docs.map((trip) => {
               const hasImage = trip.featuredImage && typeof trip.featuredImage === 'object'
@@ -167,7 +154,7 @@ export default async function HomePage() {
                           priority
                         />
                         {/* Dark Gradient Scrim Overlay Layer */}
-                        <div className="absolute inset-0 bg-linear-to-t from-black/95 via-black/50 to-black/20 z-10 transition-opacity duration-300 group-hover:opacity-90" />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/95 via-black/50 to-black/20 transition-opacity duration-300 group-hover:opacity-90" />
                       </>
                     ) : (
                       <div className="absolute inset-0 bg-slate-800 z-10" />
@@ -175,13 +162,13 @@ export default async function HomePage() {
 
                     {/* Core Content Containers raised to z-20 over backdrop */}
                     <CardHeader className="p-6 pb-3 relative z-20">
-                      <CardTitle className="text-2xl font-black tracking-tight text-white group-hover:text-primary transition-colors drop-shadow-md">
+                      <CardTitle className="text-2xl font-black tracking-tight text-white transition-all drop-shadow-md">
                         {trip.title}
                       </CardTitle>
                       <div className="pt-2">
                         <Badge
                           variant="outline"
-                          className="-translate-y-4 opacity-0 bg-white/10 text-white border-white/20 backdrop-blur-sm group-hover:bg-card group-hover:text-white group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+                          className="-translate-y-4 opacity-0 bg-white/10 border-white/20 backdrop-blur-sm group-hover:bg-card group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
                         >
                           View Itinerary
                           <ArrowUpRight className="ml-1 h-3 w-3" />
@@ -211,7 +198,7 @@ export default async function HomePage() {
               )
             })}
           </div>
-        </main>
+        </div>
       </div>
     </div>
   )

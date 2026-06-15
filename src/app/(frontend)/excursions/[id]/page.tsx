@@ -68,9 +68,9 @@ export default async function ExcursionDetailPage({ params }: ExcursionPageProps
   const gallery = excursion.galleryImages || []
 
   return (
-    <div className="p-4 md:p-8 font-sans max-w-7xl mx-auto min-h-screen bg-background text-foreground transition-colors duration-200">
+    <div className="px-4 py-16 lg:py-30 font-sans max-w-7xl mx-auto min-h-screen bg-background text-foreground transition-colors duration-200">
       {/* Upper Navigation Action Bar */}
-      <div className="mb-6">
+      <div className="lg:hidden mb-6">
         <Link
           href="/"
           className="text-sm font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-1 transition-colors"
@@ -176,7 +176,7 @@ export default async function ExcursionDetailPage({ params }: ExcursionPageProps
         </main>
 
         {/* Right Side: Floating Sticky Booking Form Sidebar Container (4 Columns out of 12) */}
-        <aside className="lg:col-span-4 lg:sticky lg:top-6 border border-border rounded-3xl p-6 shadow-lg bg-card text-card-foreground">
+        <aside className="lg:col-span-4 lg:sticky lg:top-6 p-6 text-card-foreground">
           <div className="mb-4">
             <h2 className="text-xl font-extrabold tracking-tight">Reserve This Voyage</h2>
             <p className="text-xs text-muted-foreground mt-1">
