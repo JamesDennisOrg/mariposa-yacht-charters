@@ -81,7 +81,7 @@ export default async function ExcursionDetailPage({ params }: ExcursionPageProps
 
       {/* Full-Bleed Top Featured Banner Image */}
       {featuredImageUrl && (
-        <div className="relative h-64 md:h-96 w-full bg-slate-900 rounded-3xl overflow-hidden shadow-lg mb-8">
+        <div className="relative h-100 md:h-120  w-full bg-slate-900 rounded-3xl overflow-hidden shadow-lg mb-8">
           <Image
             src={featuredImageUrl}
             alt={featuredImageAlt}
@@ -95,7 +95,7 @@ export default async function ExcursionDetailPage({ params }: ExcursionPageProps
       )}
 
       {/* Main Responsive Split Grid Layout Container */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Left Side: Detailed Descriptions, Metrics Banners, and Galleries (8 Columns out of 12) */}
         <main className="lg:col-span-8 border border-border rounded-3xl overflow-hidden shadow-lg bg-card text-card-foreground p-6 md:p-10 h-full">
           <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-3 py-1 rounded-full">
@@ -176,16 +176,7 @@ export default async function ExcursionDetailPage({ params }: ExcursionPageProps
         </main>
 
         {/* Right Side: Floating Sticky Booking Form Sidebar Container (4 Columns out of 12) */}
-        <aside className="lg:col-span-4 lg:sticky lg:top-6 p-6 text-card-foreground">
-          <div className="mb-4">
-            <h2 className="text-xl font-extrabold tracking-tight">Reserve This Voyage</h2>
-            <p className="text-xs text-muted-foreground mt-1">
-              Your chosen charter package is pre-loaded below. Select an available cruise date to
-              book.
-            </p>
-          </div>
-
-          {/* Instantiates your exact BookingForm passing the clean mapped properties */}
+        <aside className="lg:col-span-4 text-card-foreground h-full">
           <BookingForm
             itineraries={currentItineraryOption}
             unavailableDates={masterUnavailableDates}

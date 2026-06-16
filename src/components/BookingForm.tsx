@@ -81,7 +81,7 @@ export default function BookingForm({ itineraries, unavailableDates }: BookingFo
     // Form action stripped and replaced with onSubmit interceptor
     <form
       onSubmit={handleClientSubmit}
-      className="w-full bg-card text-card-foreground p-8 rounded-2xl border border-border shadow-xl space-y-6 max-w-4xl mx-auto transition-colors duration-200"
+      className="w-full h-full bg-card text-card-foreground p-8 rounded-2xl border border-border shadow-xl space-y-6 max-w-4xl mx-auto transition-colors duration-200"
     >
       <div>
         <h3 className="text-2xl font-bold tracking-tight text-foreground">Book Your Charter</h3>

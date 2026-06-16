@@ -66,48 +66,64 @@ export default async function HomePage() {
   }))
 
   return (
-    <div className="font-sans mx-auto min-h-screen">
+    <div className="">
       {/* Hero Section  */}
-      <section className="w-full overflow-hidden min-h-screen flex items-center justify-center p-6 md:p-12 mb-12">
-        <div className="absolute inset-0 w-full h-full object-cover transition-transform">
-          <video autoPlay loop muted playsInline className="w-full h-full object-cover">
-            hero-video-loop
+      <section className="relative h-auto min-h-125 max-h-500 w-full overflow-hidden place-content-center">
+        {/* Background Container - Absolute positioned */}
+        <div className="absolute inset-0 w-full h-full">
+          {/* Video for medium screens and up */}
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="hidden md:block w-full h-full object-cover"
+          >
             <source src="/hero-video-loop.mp4" type="video/mp4" />
+            Your browser does not support Video...
           </video>
-          {/* Subtle overlay gradient to mesh with dark/light background variants */}
-          {/* <div className="absolute inset-0 z-20" /> */}
+
+          {/* Image for small screens */}
+          <div
+            className="md:hidden w-full h-full bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: 'url(/media/yacht-with-backdrop.webp)' }}
+          />
+
+          {/* Optional overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/20" />
         </div>
 
-        <div className="relative text-center max-w-3xl mx-auto space-y-6 px-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 backdrop-blur-md shadow-sm">
+        {/* Content Container - On top of background */}
+        <div className="relative z-10 flex flex-col items-center justify-center max-w-7xl space-y-6 mx-auto h-full mt-8 px-4 py-12 text-center">
+          {/* <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 backdrop-blur-md shadow-sm">
             <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
             <span className="text-xs font-bold uppercase tracking-widest text-white">
               Premium Yacht Charter
             </span>
-          </div>
+          </div> */}
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter leading-[1.1] text-foreground">
-            Experience the Sea in
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter leading-[1.1] text-white">
+            Experience Mexico In
             <br />
             <span className="ml-1 bg-linear-to-r from-teal-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent drop-shadow-sm drop-shadow-black">
               Absolute Luxury
             </span>
           </h1>
-
-          <p className="text-base sm:text-lg text-muted-foreground font-medium max-w-xl mx-auto leading-relaxed">
-            Secure your private daily voyage, bespoke inclusions, and premium crew manifests across
-            Mexico's most exclusive coastal routes.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center pt-2">
-            <Link href={'#book-now'} className="w-full hover:-translate-y-1 transition-transform">
-              <Button className="cursor-pointer w-full h-10 px-6 py-4 border border-cyan-800">
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center pt-2 w-full sm:w-auto">
+            <Link
+              href="#book-now"
+              className="w-full sm:w-auto hover:-translate-y-1 transition-transform"
+            >
+              <Button className="cursor-pointer h-10 px-6 py-4 border border-cyan-800 bg-cyan-600 hover:bg-cyan-700 text-white">
                 Book Private Charter
                 <CalendarDays />
               </Button>
             </Link>
-            <Link href={'#book-now'} className="w-full hover:-translate-y-1 transition-transform">
-              <Button className="text-white cursor-pointer w-full h-10 px-6 py-4 bg-transparent border border-cyan-800 backdrop-blur-md">
+            <Link
+              href="#book-now"
+              className="w-full sm:w-auto hover:-translate-y-1 transition-transform"
+            >
+              <Button className="text-white cursor-pointer h-10 px-6 py-4 bg-transparent border border-cyan-800 backdrop-blur-md hover:bg-white/10">
                 Explore Itineraries
                 <CalendarSearch />
               </Button>
@@ -116,87 +132,88 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Main Content  */}
-      <div
-        className="grid grid-cols-1 lg:grid-cols-12 lg:max-w-7xl mx-auto gap-10 px-2 mb-16 lg:py-20 scroll-mt-0"
-        id="book-now"
-      >
-        <aside className="grid-cols-1 lg:col-span-4 order-last lg:order-first lg:pr-6 place-items-center place-content-center">
-          <BookingForm
-            itineraries={simplifiedItineraries}
-            unavailableDates={masterUnavailableDates}
-          />
-        </aside>
+      {/* Main Content */}
+      <div className="pt-36 space-y-6 py-10" id="book-now">
+        <h2 className="text-4xl text-center">Luxury Yacht Excursions, Tailored to You</h2>
+        <p className="text-lg max-w-[60ch] text-center text-balance mx-auto leading-relaxed">
+          Secure your private daily voyage, bespoke inclusions, and premium crew manifests across
+          Mexico's most exclusive coastal routes.
+        </p>
+        <div className="grid grid-cols-1 lg:grid-cols-12 lg:max-w-7xl mx-auto gap-2 px-4 py-10">
+          <aside className="sticky top-60 grid-cols-1 lg:col-span-4 order-last lg:order-first lg:pr-6">
+            <BookingForm
+              itineraries={simplifiedItineraries}
+              unavailableDates={masterUnavailableDates}
+            />
+          </aside>
 
-        <div className="grid-cols-1 lg:col-span-8 space-y-6 py-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {itinerariesData.docs.map((trip) => {
-              const hasImage = trip.featuredImage && typeof trip.featuredImage === 'object'
-              const imageUrl = hasImage ? (trip.featuredImage as any).url : null
-              const imageAlt = hasImage ? (trip.featuredImage as any).alt : trip.title
+          <div className="grid-cols-1 lg:col-span-8 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {itinerariesData.docs.map((trip) => {
+                const hasImage = trip.featuredImage && typeof trip.featuredImage === 'object'
+                const imageUrl = hasImage ? (trip.featuredImage as any).url : null
+                const imageAlt = hasImage ? (trip.featuredImage as any).alt : trip.title
 
-              return (
-                <Link
-                  href={`/excursions/${trip.id}`}
-                  key={trip.id}
-                  className="group block no-underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  <Card className="relative h-full min-h-95 flex flex-col justify-between border-border bg-slate-900 text-white shadow-sm hover:shadow-xl hover:border-primary/50 group-hover:border-primary/30 transition-all cursor-pointer overflow-hidden">
-                    {/* Absolute Background Image Asset Wrapper */}
-                    {imageUrl ? (
-                      <>
-                        <Image
-                          src={imageUrl}
-                          alt={imageAlt || trip.title}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                          sizes="(max-width: 768px) 100vw, 33vw"
-                          priority
-                        />
-                        {/* Dark Gradient Scrim Overlay Layer */}
-                        <div className="absolute inset-0 bg-linear-to-t from-black/95 via-black/50 to-black/20 transition-opacity duration-300 group-hover:opacity-90" />
-                      </>
-                    ) : (
-                      <div className="absolute inset-0 bg-slate-800 z-10" />
-                    )}
+                return (
+                  <Link
+                    href={`/excursions/${trip.id}`}
+                    key={trip.id}
+                    className="group block no-underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <Card className="relative h-full min-h-95 flex flex-col justify-between border-border bg-slate-900 text-white shadow-sm hover:shadow-xl hover:border-primary/50 group-hover:border-primary/30 transition-all cursor-pointer overflow-hidden">
+                      {imageUrl ? (
+                        <>
+                          <Image
+                            src={imageUrl}
+                            alt={imageAlt || trip.title}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                            priority
+                          />
+                          <div className="absolute inset-0 bg-linear-to-t from-black/95 via-black/50 to-black/20 transition-opacity duration-300 group-hover:opacity-90" />
+                        </>
+                      ) : (
+                        <div className="absolute inset-0 bg-slate-800 z-10" />
+                      )}
 
-                    {/* Core Content Containers raised to z-20 over backdrop */}
-                    <CardHeader className="p-6 pb-3 relative z-20">
-                      <CardTitle className="text-2xl font-black tracking-tight text-white transition-all drop-shadow-md">
-                        {trip.title}
-                      </CardTitle>
-                      <div className="pt-2">
+                      <CardHeader className="p-6 pb-3 relative z-20">
+                        <CardTitle className="text-2xl font-black tracking-tight text-white transition-all drop-shadow-md">
+                          {trip.title}
+                        </CardTitle>
+                        <div className="pt-2">
+                          <Badge
+                            variant="outline"
+                            className="-translate-y-4 opacity-0 bg-linear-to-r from-cyan-500 to-teal-500 border-white/20 backdrop-blur-sm group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+                          >
+                            View Itinerary
+                            <ArrowUpRight className="ml-1 h-3 w-3" />
+                          </Badge>
+                        </div>
+                      </CardHeader>
+
+                      <CardContent className="p-6 pt-0 pb-6 relative z-20 mt-auto">
+                        <CardDescription className="text-slate-200 text-sm font-normal leading-relaxed line-clamp-3">
+                          {trip.description}
+                        </CardDescription>
+                      </CardContent>
+
+                      <CardFooter className="p-6 pt-4 relative z-20 border-t border-white/10 bg-black/40 backdrop-blur-md flex justify-between text-xs font-semibold text-white">
+                        <Badge variant="outline" className="text-white border-white/20">
+                          <strong>Duration:</strong>&nbsp;{trip.duration} Hours
+                        </Badge>
                         <Badge
                           variant="outline"
-                          className="-translate-y-4 opacity-0 bg-white/10 border-white/20 backdrop-blur-sm group-hover:bg-card group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+                          className="text-white border-white/20 px-2.5 py-1 text-sm font-bold"
                         >
-                          View Itinerary
-                          <ArrowUpRight className="ml-1 h-3 w-3" />
+                          ${trip.price} USD
                         </Badge>
-                      </div>
-                    </CardHeader>
-
-                    <CardContent className="p-6 pt-0 pb-6 relative z-20 mt-auto">
-                      <CardDescription className="text-slate-200 text-sm font-normal leading-relaxed line-clamp-3">
-                        {trip.description}
-                      </CardDescription>
-                    </CardContent>
-
-                    <CardFooter className="p-6 pt-4 relative z-20 border-t border-white/10 bg-black/40 backdrop-blur-md flex justify-between text-xs font-semibold text-white">
-                      <Badge variant="outline" className="text-white border-white/20">
-                        <strong>Duration:</strong>&nbsp;{trip.duration} Hours
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="text-white border-white/20 px-2.5 py-1 text-sm font-bold"
-                      >
-                        ${trip.price} USD
-                      </Badge>
-                    </CardFooter>
-                  </Card>
-                </Link>
-              )
-            })}
+                      </CardFooter>
+                    </Card>
+                  </Link>
+                )
+              })}
+            </div>
           </div>
         </div>
       </div>

@@ -14,11 +14,11 @@ interface HeaderProps {
 export default function Header({ user }: HeaderProps) {
   return (
     // <header className="w-full mx-auto px-6 py-2 fixed top-0 z-9999 bg-black/5 backdrop-blur-md">
-    <header className="fixed lg:top-6 lg:left-[50%] lg:translate-x-[-50%] lg:rounded-full px-8 w-full lg:w-7xl mx-auto bg-teal-700/60 backdrop-blur-sm shadow-md z-9999">
+    <header className="fixed md:top-6 md:left-[50%] md:translate-x-[-50%] md:rounded-full px-8 w-full md:max-w-4xl xl:max-w-7xl bg-teal-700/60 backdrop-blur-sm shadow-md z-9999">
       <nav className="flex justify-between items-center py-2">
         <div className="">
           <Link href="/" className="">
-            <h1 className="text-[5vw] lg:text-[2vw] font-extrabold tracking-tight m-0 bg-linear-to-r from-teal-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent drop-shadow-sm drop-shadow-black">
+            <h1 className="text-[3vw] lg:text-[2.5vw] xl:text-[2vw] font-extrabold tracking-tight m-0 bg-linear-to-r from-teal-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent drop-shadow-sm drop-shadow-black">
               Mariposa Yacht Charters
             </h1>
           </Link>
