@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Clock4, LucideCheckCircle, LucideDollarSign } from 'lucide-react'
 import BookingForm from '@/components/BookingForm'
+import MotionReveal from '@/components/motion/MotionReveal'
 
 interface ExcursionPageProps {
   params: Promise<{ id: string }>
@@ -81,7 +82,7 @@ export default async function ExcursionDetailPage({ params }: ExcursionPageProps
 
       {/* Full-Bleed Top Featured Banner Image */}
       {featuredImageUrl && (
-        <div className="relative h-100 md:h-120  w-full bg-slate-900 rounded-3xl overflow-hidden shadow-lg mb-8">
+        <MotionReveal className="relative h-100 md:h-120  w-full bg-slate-900 rounded-3xl overflow-hidden shadow-lg mb-8">
           <Image
             src={featuredImageUrl}
             alt={featuredImageAlt}
@@ -91,13 +92,15 @@ export default async function ExcursionDetailPage({ params }: ExcursionPageProps
             sizes="100vw"
           />
           <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
-        </div>
+        </MotionReveal>
       )}
 
       {/* Main Responsive Split Grid Layout Container */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-        {/* Left Side: Detailed Descriptions, Metrics Banners, and Galleries (8 Columns out of 12) */}
-        <main className="lg:col-span-8 border border-border rounded-3xl overflow-hidden shadow-lg bg-card text-card-foreground p-6 md:p-10 h-full">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+        <MotionReveal
+          delay={0.1}
+          className="lg:col-span-2 border border-border rounded-3xl overflow-hidden shadow-lg bg-card text-card-foreground p-6 md:p-10 h-full"
+        >
           <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-3 py-1 rounded-full">
             Private Daily Yacht Hire
           </span>
@@ -173,15 +176,14 @@ export default async function ExcursionDetailPage({ params }: ExcursionPageProps
               </div>
             </div>
           )}
-        </main>
+        </MotionReveal>
 
-        {/* Right Side: Floating Sticky Booking Form Sidebar Container (4 Columns out of 12) */}
-        <aside className="lg:col-span-4 text-card-foreground h-full">
+        <MotionReveal delay={0.15} className="lg:col-span-1 text-card-foreground h-full">
           <BookingForm
             itineraries={currentItineraryOption}
             unavailableDates={masterUnavailableDates}
           />
-        </aside>
+        </MotionReveal>
       </div>
     </div>
   )

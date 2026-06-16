@@ -17,6 +17,9 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { ArrowUpRight, CalendarDays, CalendarSearch } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import MotionReveal from '@/components/motion/MotionReveal'
+import MotionGridStagger from '@/components/motion/MotionGridStagger'
+import MotionStackStagger from '@/components/motion/MotionStackStagger'
 
 export default async function HomePage() {
   const clientHeaders = await getNextHeaders()
@@ -68,7 +71,7 @@ export default async function HomePage() {
   return (
     <div className="">
       {/* Hero Section  */}
-      <section className="relative h-auto min-h-125 max-h-500 w-full overflow-hidden place-content-center">
+      <section className="relative h-auto min-h-140 max-h-500 w-full overflow-hidden place-content-center">
         {/* Background Container - Absolute positioned */}
         <div className="absolute inset-0 w-full h-full">
           {/* Video for medium screens and up */}
@@ -94,14 +97,7 @@ export default async function HomePage() {
         </div>
 
         {/* Content Container - On top of background */}
-        <div className="relative z-10 flex flex-col items-center justify-center max-w-7xl space-y-6 mx-auto h-full mt-8 px-4 py-12 text-center">
-          {/* <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 backdrop-blur-md shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
-            <span className="text-xs font-bold uppercase tracking-widest text-white">
-              Premium Yacht Charter
-            </span>
-          </div> */}
-
+        <div className="relative z-10 flex flex-col items-center justify-center max-w-7xl space-y-12 mx-auto h-full mt-8 px-4 py-12 text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter leading-[1.1] text-white">
             Experience Mexico In
             <br />
@@ -134,12 +130,15 @@ export default async function HomePage() {
 
       {/* Main Content */}
       <div className="pt-36 space-y-6 py-10" id="book-now">
-        <h2 className="text-4xl text-center">Luxury Yacht Excursions, Tailored to You</h2>
-        <p className="text-lg max-w-[60ch] text-center text-balance mx-auto leading-relaxed">
-          Secure your private daily voyage, bespoke inclusions, and premium crew manifests across
-          Mexico's most exclusive coastal routes.
-        </p>
-        <div className="grid grid-cols-1 lg:grid-cols-12 lg:max-w-7xl mx-auto gap-2 px-4 py-10">
+        <MotionStackStagger staggerDelay={0.15}>
+          <h2 className="text-4xl text-center">Luxury Yacht Excursions, Tailored to You</h2>
+          <p className="text-lg max-w-[60ch] text-center text-balance mx-auto leading-relaxed">
+            Secure your private daily voyage, bespoke inclusions, and premium crew manifests across
+            Mexico's most exclusive coastal routes.
+          </p>
+        </MotionStackStagger>
+
+        <MotionReveal className="grid grid-cols-1 lg:grid-cols-12 lg:max-w-7xl mx-auto gap-2 px-4 py-10">
           <aside className="sticky top-60 grid-cols-1 lg:col-span-4 order-last lg:order-first lg:pr-6">
             <BookingForm
               itineraries={simplifiedItineraries}
@@ -148,7 +147,11 @@ export default async function HomePage() {
           </aside>
 
           <div className="grid-cols-1 lg:col-span-8 space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <MotionGridStagger
+              baseDelay={0.3}
+              staggerFactor={0.15}
+              className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            >
               {itinerariesData.docs.map((trip) => {
                 const hasImage = trip.featuredImage && typeof trip.featuredImage === 'object'
                 const imageUrl = hasImage ? (trip.featuredImage as any).url : null
@@ -213,9 +216,9 @@ export default async function HomePage() {
                   </Link>
                 )
               })}
-            </div>
+            </MotionGridStagger>
           </div>
-        </div>
+        </MotionReveal>
       </div>
     </div>
   )
