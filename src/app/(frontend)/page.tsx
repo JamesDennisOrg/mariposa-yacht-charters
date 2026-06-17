@@ -73,7 +73,7 @@ export default async function HomePage() {
       {/* Hero Section  */}
       <section className="relative h-auto min-h-180 max-h-500 w-full overflow-hidden place-content-center">
         {/* Background Container - Absolute positioned */}
-        <div className="absolute inset-0 w-full h-full">
+        <MotionReveal distance={0} className="absolute inset-0 w-full h-full">
           {/* Video for medium screens and up */}
           <video
             autoPlay
@@ -94,7 +94,7 @@ export default async function HomePage() {
 
           {/* Optional overlay for better text readability */}
           <div className="absolute inset-0 bg-black/20" />
-        </div>
+        </MotionReveal>
 
         {/* Content Container - On top of background */}
         <div className="relative z-10 flex flex-col items-center justify-center max-w-7xl space-y-20 mx-auto h-full mt-8 px-4 py-12 text-center">

@@ -8,6 +8,7 @@ import Header from '@/components/Header'
 import './styles.css'
 
 import 'sharp'
+import MotionReveal from '@/components/motion/MotionReveal'
 
 export const dynamic = 'force-dynamic'
 
