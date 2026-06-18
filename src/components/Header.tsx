@@ -19,7 +19,7 @@ export default function Header({ user }: HeaderProps) {
   const { scrollY } = useScroll()
 
   useMotionValueEvent(scrollY, 'change', (latest) => {
-    setIsScrolled(latest > 100)
+    setIsScrolled(latest > 200)
   })
 
   return (
@@ -27,10 +27,7 @@ export default function Header({ user }: HeaderProps) {
     <header className="fixed top-0 left-0 w-full z-50 pointer-events-none h-20 md:h-24">
       {/* Animated nav container */}
       <motion.div
-        className={cn(
-          'flex justify-between items-center mx-auto pointer-events-auto',
-          'transition-all duration-300 ease-in-out',
-        )}
+        className={cn('flex justify-between items-center mx-auto pointer-events-auto')}
         initial={{
           width: 'calc(100% - 4rem)',
           maxWidth: '80rem',
@@ -65,8 +62,8 @@ export default function Header({ user }: HeaderProps) {
         }}
         transition={{
           type: 'tween',
-          duration: 0.4,
-          ease: 'easeInOut',
+          duration: 0.5,
+          ease: 'linear',
         }}
       >
         {/* Logo and subtitle */}
@@ -79,7 +76,7 @@ export default function Header({ user }: HeaderProps) {
               }}
               transition={{
                 type: 'tween',
-                duration: 0.4,
+                duration: 0.5,
                 ease: 'easeInOut',
               }}
             >
@@ -94,10 +91,10 @@ export default function Header({ user }: HeaderProps) {
             }}
             transition={{
               type: 'tween',
-              duration: 0.4,
-              ease: 'easeInOut',
+              duration: 0.3,
+              ease: 'linear',
               // Slight delay on opacity to prevent subtitle from showing during height transition
-              opacity: { duration: 0.3, delay: isScrolled ? 0 : 0.1 },
+              height: { duration: 0.3, delay: isScrolled ? 0 : 0.1 },
             }}
           >
             <p className="hidden lg:block text-white/65 font-sans text-sm -mt-1 whitespace-nowrap">
