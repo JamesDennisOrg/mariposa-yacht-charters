@@ -89,7 +89,7 @@ export default async function HomePage() {
           {/* Image for small screens */}
           <div
             className="md:hidden w-full h-full bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: 'url(/media/yacht-with-backdrop.webp)' }}
+            style={{ backgroundImage: 'url(/yacht-with-backdrop.webp)' }}
           />
 
           {/* Optional overlay for better text readability */}
@@ -97,7 +97,7 @@ export default async function HomePage() {
         </MotionReveal>
 
         {/* Content Container - On top of background */}
-        <div className="relative z-10 flex flex-col items-center justify-center max-w-7xl space-y-20 mx-auto h-full mt-8 px-4 py-12 text-center">
+        <div className="relative z-10 flex flex-col items-center justify-center max-w-7xl md:space-y-20 mx-auto h-full mt-8 px-4 py-12 text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter leading-[1.1] text-white">
             Experience Mexico In
             <br />
@@ -105,7 +105,7 @@ export default async function HomePage() {
               Absolute Luxury
             </span>
           </h1>
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center pt-2 w-full sm:w-auto">
+          <div className="flex flex-row flex-wrap pt-60 gap-4 items-center justify-center sm:pt-2 w-full sm:w-full">
             <Link
               href="#book-now"
               className="w-full sm:w-auto hover:-translate-y-1 transition-transform"

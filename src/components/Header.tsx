@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { LogIn } from 'lucide-react'
 import { motion, useScroll, useMotionValueEvent } from 'motion/react'
 import { cn } from '@/lib/utils'
+import { useState, useEffect } from 'react'
 
 interface HeaderProps {
   user: {
@@ -15,6 +16,17 @@ interface HeaderProps {
 }
 
 export default function Header({ user }: HeaderProps) {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkWidth = () => {
+      setIsMobile(window.innerWidth < 768) // Matches standard Tailwind 'md' break rule
+    }
+    checkWidth()
+    window.addEventListener('resize', checkWidth)
+    return () => window.removeEventListener('resize', checkWidth)
+  }, [])
+
   const [isScrolled, setIsScrolled] = React.useState(false)
   const { scrollY } = useScroll()
 
@@ -72,7 +84,14 @@ export default function Header({ user }: HeaderProps) {
             <motion.h1
               className="font-extrabold tracking-tight m-0 bg-linear-to-r from-teal-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent drop-shadow-sm drop-shadow-black whitespace-nowrap leading-none"
               animate={{
-                fontSize: isScrolled ? 'clamp(1rem, 1.5vw, 1.5rem)' : 'clamp(1.25rem, 2vw, 2.5rem)',
+                // Pass explicit, single string conditions that the keyframes block won't swallow
+                fontSize: isMobile
+                  ? isScrolled
+                    ? '0.95rem'
+                    : '1.2rem' // Mobile target sizes
+                  : isScrolled
+                    ? '1.5rem'
+                    : '2.5rem', // Desktop target sizes
               }}
               transition={{
                 type: 'tween',
@@ -120,36 +139,47 @@ export default function Header({ user }: HeaderProps) {
               <Link
                 href="/admin"
                 className={cn(
-                  'rounded-lg font-semibold shadow-sm transition-all duration-300',
+                  'rounded-lg font-semibold shadow-sm transition-all duration-300 block text-center',
                   'bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-slate-200',
                   'text-white dark:text-slate-900',
-                  isScrolled ? 'px-3 py-1.5 text-xs' : 'px-4 py-2 text-sm',
+                  isScrolled ? 'px-2 py-1 text-xs max-w-[120px] truncate' : 'px-4 py-2 text-sm',
                 )}
               >
-                Admin Dashboard ({user.email})
+                {/* Hide email string metadata on small panels to protect formatting arrays */}
+                <span className="hidden sm:inline">Admin ({user.email})</span>
+                <span className="inline sm:hidden">Admin</span>
               </Link>
             </motion.div>
           ) : (
-            <Link href="/admin/login">
+            <Link href="/admin/login" className="block">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="flex items-center"
               >
+                {/* DESKTOP VIEWPORT LAYOUT VIEW: Standard text layout format */}
                 <Button
                   variant="link"
                   className={cn(
-                    'cursor-pointer text-cyan-500 hover:text-primary transition-all duration-300 hover:no-underline gap-2',
+                    'hidden md:flex cursor-pointer text-cyan-500 hover:text-primary transition-all duration-300 hover:no-underline gap-2 items-center',
                     isScrolled ? 'text-sm px-2' : 'text-base px-4',
                   )}
                 >
                   Staff Login
-                  <LogIn
-                    className={cn(
-                      'transition-all duration-300',
-                      isScrolled ? 'h-3.5 w-3.5' : 'h-4 w-4',
-                    )}
-                  />
+                  <LogIn className={isScrolled ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
+                </Button>
+
+                {/* MOBILE VIEWPORT LAYOUT VIEW: Compact button format */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={cn(
+                    'flex md:hidden cursor-pointer text-cyan-500 hover:text-primary transition-all duration-300 rounded-full items-center justify-center',
+                    isScrolled ? 'h-8 w-8' : 'h-10 w-10',
+                  )}
+                  aria-label="Staff Login"
+                >
+                  <LogIn className={isScrolled ? 'h-4 w-4' : 'h-5 w-5'} />
                 </Button>
               </motion.div>
             </Link>
